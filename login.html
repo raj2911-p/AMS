@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Login</title>
+
+<link rel="stylesheet" href="css/login_style.css">
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+<!-- LOGO -->
+<img src="logo.png" class="logo">
+
+<h2>Admin Login</h2>
+
+<input id="username" placeholder="Username">
+
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script src="js/config.js"></script>
+
+<script>
+
+function login(){
+
+let username=document.getElementById("username").value
+let password=document.getElementById("password").value
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"login",
+username:username,
+password:password
+})
+})
+
+.then(res=>res.json())
+.then(data=>{
+
+if(data.status=="success"){
+
+localStorage.setItem("admin","true")
+
+window.location="dashboard.html"
+
+}
+else{
+
+document.getElementById("msg").innerText="Invalid Login"
+
+}
+
+})
+
+}
+
+</script>
+
+</body>
+
+</html>

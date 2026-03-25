@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Attendance</title>
+
+<link rel="stylesheet" href="css/attendance-create_style.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">AMS</div>
+
+<div class="nav-links">
+<a href="dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="batches.html">Batches</a>
+</div>
+
+<div class="admin">
+<img src="https://i.pravatar.cc/40">
+<span>Admin</span>
+</div>
+
+</div>
+
+
+<div class="container">
+
+<h1 class="page-title">Create Attendance</h1>
+
+
+<div class="student-layout">
+
+
+<!-- LEFT SIDE : ATTENDANCE DETAILS -->
+
+<div class="student-form">
+
+<h2>Attendance Details</h2>
+
+<h3 id="batchName"></h3>
+<h3 id="facultyName"></h3>
+
+<label>Date</label>
+<input type="date" id="attDate">
+
+<label>Start Time</label>
+<input type="time" id="attStartTime">
+
+<label>End Time</label>
+<input type="time" id="attEndTime">
+
+<label>Topic Taught</label>
+<input type="text" id="attTopic" placeholder="Topic Taught">
+
+</div>
+
+
+
+<!-- RIGHT SIDE : MARK ATTENDANCE -->
+
+<div class="student-table">
+
+<h2>Mark Attendance</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Present</th>
+<th>Absent</th>
+</tr>
+</thead>
+
+<tbody id="attendanceTable"></tbody>
+
+</table>
+
+<button class="create-btn" onclick="submitAttendance()">
+Submit Attendance
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script src="js/config.js"></script>
+<script src="js/attendance.js"></script>
+
+
+<script>
+
+window.onload = function(){
+
+const batchId = localStorage.getItem("attendanceBatch")
+
+let today = new Date()
+
+let yyyy = today.getFullYear()
+let mm = String(today.getMonth()+1).padStart(2,'0')
+let dd = String(today.getDate()).padStart(2,'0')
+
+document.getElementById("attDate").value = `${yyyy}-${mm}-${dd}`
+
+let hours = String(today.getHours()).padStart(2,'0')
+let minutes = String(today.getMinutes()).padStart(2,'0')
+
+document.getElementById("attStartTime").value = `${hours}:${minutes}`
+
+
+fetch(API + "?action=getBatches")
+.then(res => res.json())
+.then(data => {
+
+data.slice(1).forEach(batch => {
+
+if(batch[0] == batchId){
+
+document.getElementById("batchName").innerText = "Batch Name : " + batch[1]
+
+document.getElementById("facultyName").innerText =
+"Faculty Name : " + (batch[2] || "Not Assigned")
+
+}
+
+})
+
+})
+
+loadBatchStudents()
+
+}
+
+</script>
+
+<script>
+
+if(!localStorage.getItem("admin")){
+window.location="login.html"
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+/* GLOBAL */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',system-ui,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
+min-height:100vh;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:16px 40px;
+background:linear-gradient(135deg,#1e3a8a,#2563eb);
+color:white;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.logo{
+font-weight:700;
+font-size:22px;
+letter-spacing:0.5px;
+}
+
+.title{
+font-size:18px;
+font-weight:600;
+opacity:0.9;
+}
+
+.nav-links{
+display:flex;
+align-items:center;
+gap:25px;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+font-weight:500;
+position:relative;
+}
+
+.nav-links a::after{
+content:"";
+position:absolute;
+width:0%;
+height:2px;
+background:white;
+bottom:-4px;
+left:0;
+transition:0.3s;
+}
+
+.nav-links a:hover::after{
+width:100%;
+}
+
+.active{
+font-weight:600;
+}
+
+/* ================= ADMIN PROFILE ================= */
+
+.admin{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.admin img{
+border-radius:50%;
+border:2px solid white;
+} 
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:10px;
+text-align:center;
+}
+
+.nav-links{
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+}
+
+}
+
+/* PAGE TITLE */
+
+.page-title{
+font-size:32px;
+margin-bottom:30px;
+font-weight:700;
+color:#1e293b;
+
+opacity:0;
+animation:fadeSlide 0.7s ease forwards;
+}
+
+@keyframes fadeSlide{
+
+0%{
+opacity:0;
+transform:translateY(30px);
+}
+
+100%{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* LAYOUT */
+
+.container{
+padding:20px 40px 40px 40px;
+max-width:1500px;
+margin:auto;
+}
+
+.student-layout{
+display:grid;
+grid-template-columns:350px 1fr;
+gap:30px;
+align-items:start;
+}
+
+/* STUDENT FORM CARD */
+
+.student-form{
+background:white;
+padding:30px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+height: fit-content;
+transition:all 0.3s ease;
+}
+
+.student-form:hover{
+transform:translateY(-6px);
+box-shadow:0 14px 40px rgba(0,0,0,0.12);
+}
+
+.student-form h2{
+margin-bottom:20px;
+color:#1e3a8a;
+}
+
+/* INPUT FIELDS */
+
+.student-form input{
+
+width:100%;
+padding:12px 14px;
+margin-bottom:16px;
+
+border:2px solid #dbeafe;
+border-radius:8px;
+
+font-size:14px;
+background:#f8fafc;
+
+outline:none;
+
+transition:all 0.25s ease;
+
+}
+
+.student-form label{
+display:block;
+margin-top:10px;
+margin-bottom:6px;
+font-weight:500;
+}
+
+/* INPUT FOCUS EFFECT */
+
+.student-form input:focus{
+
+border-color:#2563eb;
+background:white;
+
+box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+
+}
+
+/* PLACEHOLDER */
+
+.student-form input::placeholder{
+color:#94a3b8;
+}
+
+/* CREATE BUTTON */
+
+.create-btn{
+width: auto;
+padding:12px;
+display:flex;
+justify-content:right;
+margin-top:20px;
+
+border:none;
+border-radius:8px;
+
+background:linear-gradient(135deg,#2563eb,#1e40af);
+
+color:white;
+font-size:15px;
+font-weight:500;
+
+cursor:pointer;
+
+transition:all 0.25s ease;
+
+}
+
+/* BUTTON HOVER */
+
+.create-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 6px 20px rgba(37,99,235,0.4);
+
+}
+
+/* BUTTON CLICK */
+
+.create-btn:active{
+transform:scale(0.97);
+}
+
+/* FORM RESPONSIVE */
+
+@media(max-width:768px){
+
+.student-form{
+padding:20px;
+}
+
+.student-form h2{
+font-size:18px;
+}
+
+}
+
+/* TABLE */
+
+.student-table{
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+transition:all 0.3s ease;
+}
+
+.student-table:hover{
+transform:translateY(-6px);
+box-shadow:0 14px 40px rgba(0,0,0,0.12);
+}
+
+.student-table h2{
+margin-bottom:20px;
+color:#1e3a8a;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+thead{
+background:#f1f5f9;
+}
+
+th,td{
+padding:14px;
+text-align:left;
+}
+
+th{
+color:#1e293b;
+font-weight:600;
+}
+
+tbody tr{
+border-bottom:1px solid #e2e8f0;
+transition:0.2s;
+}
+
+tbody tr:hover{
+background:#f8fafc;
+}
+
+/* ACTION BUTTON */
+
+table button{
+background:#2563eb;
+color:white;
+border:none;
+padding:6px 12px;
+border-radius:5px;
+cursor:pointer;
+transition:0.2s;
+}
+
+table button:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 20px rgba(37,99,235,0.4);
+background:#1e40af;
+}
+
+table button:active{
+    transform:scale(0.97);
+}
+
+#batchName{
+margin-bottom:6px;
+}
+
+#facultyName{
+margin-bottom:16px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.student-layout{
+grid-template-columns:1fr;
+}
+
+.page-title{
+margin:25px;
+}
+
+.container{
+padding:0 20px 30px 20px;
+}
+
+}

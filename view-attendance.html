@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Details</title>
+
+<link rel="stylesheet" href="css/view-attendance_style.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">AMS</div>
+
+<div class="nav-links">
+<a href="dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="batches.html">Batches</a>
+</div>
+
+<div class="admin">
+<img src="https://i.pravatar.cc/40">
+<span>Admin</span>
+</div>
+
+</div>
+
+<div class="container">
+
+<h1 class="page-title">Attendance Details</h1>
+
+<div class="student-layout">
+
+<!-- SESSION INFO -->
+
+<div class="student-form">
+
+<h2>Session Information</h2>
+
+<h3 id="batchName"></h3>
+<h3 id="facultyName"></h3>
+
+<h4>Date : <span id="attDate"></span></h4>
+<h4>Time : <span id="attTime"></span></h4>
+<h4>Topic : <span id="attTopic"></span></h4>
+
+</div>
+
+
+<!-- ATTENDANCE LIST -->
+
+<div class="student-table">
+
+<h2>Student Attendance</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Student</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<div class="attendance-summary">
+
+<span class="present-count">
+Present : <b id="presentCount">0</b>
+</span>
+
+<span class="absent-count">
+Absent : <b id="absentCount">0</b>
+</span>
+
+</div>
+
+<tbody id="attendanceView"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/view-attendence.js"></script>
+
+<script>
+if(!localStorage.getItem("admin")){
+window.location="login.html"
+}
+</script>
+
+</body>
+</html>

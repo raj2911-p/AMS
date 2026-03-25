@@ -1,0 +1,179 @@
+/* ===== LOGIN PAGE ===== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+background-image:url("bg.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+
+/* ===== LOGIN BOX ===== */
+
+.login-box{
+background:white;
+padding:70px 35px;
+width: 100%;
+max-width:500px;
+height: 500px;
+border-radius:12px;
+box-shadow:0 12px 35px rgba(0,0,0,0.25);
+text-align:center;
+transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Hover Effect */
+
+.login-box:hover{
+transform:scale(1.05);
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* ===== LOGO ===== */
+
+.logo{
+width:200px;
+max-width:100%;
+margin-bottom:15px;
+}
+
+/* ===== HEADING ===== */
+
+.login-box h2{
+margin-bottom:20px;
+font-weight:700;
+color:#1e293b;
+}
+
+/* ===== INPUT ===== */
+
+.login-box input{
+width:100%;
+padding:12px;
+margin-top:12px;
+border:1px solid #d1d5db;
+border-radius:6px;
+font-size:14px;
+transition:0.3s;
+}
+
+/* INPUT FOCUS */
+
+.login-box input:focus{
+outline:none;
+border-color:#2563eb;
+box-shadow:0 0 6px rgba(37,99,235,0.3);
+}
+
+/* ===== BUTTON ===== */
+
+.login-box button{
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:6px;
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+/* BUTTON HOVER */
+
+.login-box button:hover{
+background:#1e40af;
+transform:translateY(-2px);
+box-shadow:0 5px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== ERROR MESSAGE ===== */
+
+#msg{
+margin-top:10px;
+color:red;
+font-size:14px;
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+
+@media (max-width:768px){
+
+.login-box{
+padding:35px 25px;
+}
+
+.logo{
+width:150px;
+}
+
+}
+
+/* Mobile */
+
+/* ===== MOBILE VIEW FIX ===== */
+
+@media (max-width:480px){
+
+body{
+padding:10px;
+align-items:center;
+}
+
+/* make card large */
+
+.login-box{
+width:100%;
+max-width:100%;
+padding:40px 25px;
+border-radius:16px;
+}
+
+/* bigger logo */
+
+.logo{
+width:160px;
+}
+
+/* bigger inputs */
+
+.login-box input{
+padding:15px;
+font-size:16px;
+}
+
+/* bigger button */
+
+.login-box button{
+padding:15px;
+font-size:16px;
+}
+
+}

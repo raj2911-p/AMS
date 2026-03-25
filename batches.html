@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Batches</title>
+
+<link rel="stylesheet" href="css/batches_style.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">AMS</div>
+
+<div class="nav-links">
+<a href="dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="batches.html" class="active">Batches</a>
+</div>
+
+<div class="admin">
+<img src="https://i.pravatar.cc/40">
+<span>Admin</span>
+</div>
+
+</div>
+
+
+<div class="container">
+
+<h1 class="page-title">Batches Management</h1>
+
+
+<div class="student-layout">
+
+
+<!-- ADD BATCH FORM -->
+
+<div class="student-form">
+
+<h2>Add New Batch</h2>
+
+<input id="batchName" placeholder="Batch Name">
+
+<input id="facultyName" placeholder="Faculty Name">
+
+<button class="create-btn" onclick="createBatch()">
+Create Batch
+</button>
+
+</div>
+
+
+
+<!-- BATCH LIST -->
+
+<div class="student-table">
+
+<h2>Batches List</h2>
+
+<button class="export-btn export-right" onclick="exportBatchPDF()">
+<b>Export PDF</b>
+</button>
+
+<table>
+
+<thead>
+<tr>
+<th>Batch Name</th>
+<th>Faculty</th>
+<th>No. Students</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="batchTable"></tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/batches.js"></script>
+
+<script>
+if(!localStorage.getItem("admin")){
+window.location="login.html"
+}
+</script>
+
+</body>
+</html>

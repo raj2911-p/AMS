@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Profile</title>
+
+<link rel="stylesheet" href="css/student-profile_style.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">AMS</div>
+
+<div class="nav-links">
+<a href="dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="batches.html">Batches</a>
+</div>
+
+<div class="admin">
+<img src="https://i.pravatar.cc/40">
+<span>Admin</span>
+</div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="container">
+
+<h1 class="page-title">Student Profile</h1>
+
+<div class="student-layout">
+
+<!-- LEFT CARD -->
+
+<div class="profile-card">
+
+<h3> Student Name: <span id="studentName" title=""></span></h3>
+
+<h4>Mobile No.: +91 <span id="studentPhone"></span></h4>
+<br>
+<h4>Email-ID: <span id="studentEmail"></span></h4>
+<br>
+<br>
+<h3>Attendance %</h3>
+
+<div class="progress-bar">
+<div id="attendanceBar" class="progress-fill">
+<span id="attendancePercent">0%</span>
+</div>
+</div>
+
+</div>
+
+<!-- RIGHT CARD -->
+
+<div class="history-card">
+
+<h2>
+Attendance History
+
+<div class="export-container">
+<button class="create-btn" onclick="exportFullStudentProfile()"><b>Export PDF</b></button>
+</div>
+
+</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Time</th>
+<th>Batch</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="studentAttendance"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/student-profile.js"></script>
+
+<script>
+if(!localStorage.getItem("admin")){
+window.location="login.html"
+}
+</script>
+
+</body>
+</html>

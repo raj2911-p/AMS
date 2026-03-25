@@ -1,0 +1,108 @@
+body{
+font-family:Arial;
+margin:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:10px;
+text-align:left;
+}
+
+button{
+padding:8px 12px;
+margin-top:10px;
+}
+
+.cards{
+display:flex;
+gap:20px;
+}
+
+.card{
+border:1px solid #ccc;
+padding:20px;
+width:200px;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1e293b;
+color:white;
+padding:15px 30px;
+}
+
+.logo{
+font-size:18px;
+font-weight:bold;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+font-size:14px;
+}
+
+.nav-links a:hover{
+text-decoration:underline;
+}
+
+.logout-btn{
+background:#ef4444;
+border:none;
+color:white;
+padding:6px 12px;
+cursor:pointer;
+}
+
+/*----*/
+
+.attendance-form{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+max-width:600px;
+margin-bottom:20px;
+
+}
+
+.attendance-form input{
+
+padding:10px;
+border:1px solid #ddd;
+border-radius:6px;
+font-size:14px;
+
+}
+
+button{
+
+padding:10px 20px;
+background:#2563eb;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+button:hover{
+background:#1d4ed8;
+}

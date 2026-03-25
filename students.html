@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Students</title>
+
+<link rel="stylesheet" href="css/students_style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">
+AMS
+</div>
+
+<div class="nav-links">
+
+<a href="dashboard.html">Dashboard</a>
+<a href="students.html" class="active">Students</a>
+<a href="batches.html">Batches</a>
+
+</div>
+
+<div class="admin">
+<img src="https://i.pravatar.cc/40">
+<span id="adminName">Admin</span>
+</div>
+
+</div>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+<h1 class="page-title">
+Students Management
+</h1>
+
+
+<div class="student-layout">
+
+
+<!-- STUDENT FORM -->
+
+<div class="student-form">
+
+<h2>Add New Student</h2>
+
+<input id="studentName" placeholder="Student Name">
+
+<input id="studentPhone" placeholder="Mobile Number">
+
+<input id="studentEmail" placeholder="Email Address">
+
+<button class="create-btn" onclick="addStudent()">
+Create Student
+</button>
+
+</div>
+
+
+
+<!-- STUDENT TABLE -->
+<div class="student-table">
+
+<h2>Students List
+<div class="export-container">
+<button class="export-btn" onclick="exportStudentPDF()">
+<b>Export PDF</b>
+</button>
+</div>
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Name</th>
+<th>Mobile No.</th>
+<th>Email-ID</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="studentTable"></tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/students.js"></script>
+
+<script>
+
+if(!localStorage.getItem("admin")){
+window.location="login.html"
+}
+
+</script>
+
+</body>
+</html>
