@@ -1,24 +1,3 @@
-const API = "https://script.google.com/macros/s/XXXXX/exec"
-const PROXY = "https://api.allorigins.win/raw?url="
-
-function apiGet(params){
-  let url = API + "?" + new URLSearchParams(params).toString()
-  return fetch(PROXY + encodeURIComponent(url))
-    .then(res => res.text())
-    .then(text => {
-      try{return JSON.parse(text)}catch(e){return []}
-    })
-}
-
-function apiPost(data){
-  return apiPost({
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  }).then(res=>res.json())
-}
-
-
 let sessionId = localStorage.getItem("viewSession")
 
 let date = localStorage.getItem("viewDate")
@@ -35,7 +14,7 @@ document.getElementById("attTopic").innerText = topic
 
 /* LOAD BATCH NAME + FACULTY */
 
-apiGet({action:"getBatches"})
+fetch(API+"?action=getBatches")
 .then(res=>res.json())
 .then(data=>{
 
@@ -117,7 +96,7 @@ let sessionId = localStorage.getItem("viewSession")
    🔹 GET BATCH INFO
 ========================= */
 
-let batchRes = await apiGet({action:"getBatches"})
+let batchRes = await fetch(API+"?action=getBatches")
 let batchData = await batchRes.json()
 
 let batch = batchData.slice(1).find(b => b[0] == batchId)
