@@ -147,10 +147,53 @@ loadBatchStudents()
 
 <script>
 
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("user")){
 window.location="login.html"
 }
 
+</script>
+
+<script>
+    document.addEventListener("input", function(e){
+
+    if(e.target.id === "attTopic"){
+
+        let pos = e.target.selectionStart
+
+        let value = e.target.value
+
+        value = value
+        .split(" ")
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ")
+
+        e.target.value = value
+
+        e.target.setSelectionRange(pos,pos)
+    }
+
+    /* REMOVE ERROR */
+
+    if(e.target.value.trim()){
+        e.target.classList.remove("error-input")
+    }
+
+})
+
+document.addEventListener("change", function(e){
+
+    // 🎯 ONLY RADIO BUTTONS
+    if(e.target.type === "radio"){
+
+        let row = e.target.closest("tr")
+
+        if(row){
+            row.style.background = ""   // ✅ remove red
+        }
+
+    }
+
+})
 </script>
 
 </body>

@@ -7,15 +7,20 @@ loadStudents()
 function addStudent(){
 
 let name = formatName(document.getElementById("studentName").value)
+let dob = document.getElementById("studentDob").value
 let phone = document.getElementById("studentPhone").value.trim()
 let email = document.getElementById("studentEmail").value.trim()
 
 /* ===== VALIDATION ===== */
 
-if(!name.trim() || !phone.trim() || !email.trim()){
+if(!name.trim() || !dob.trim() || !phone.trim() || !email.trim()){
 
     if(!name.trim()){
         document.getElementById("studentName").classList.add("error-input")
+    }
+
+    if(!dob.trim()){
+        document.getElementById("studentDob").classList.add("error-input")
     }
 
     if(!phone.trim()){
@@ -95,6 +100,7 @@ method:"POST",
 body:JSON.stringify({
 action:"addStudent",
 name:name,
+dob:dob,
 phone:phone,
 email:email
 })
@@ -104,6 +110,7 @@ email:email
 alert("Student Created")
 
 document.getElementById("studentName").value=""
+document.getElementById("studentDob").value=""
 document.getElementById("studentPhone").value=""
 document.getElementById("studentEmail").value=""
 
@@ -132,15 +139,16 @@ table.innerHTML+=`
 
 <tr id="row-${s[0]}">
 
-<td>${s[1]}</td>
-<td>+91 ${s[2]}</td>
-<td>${s[3]}</td>
+<td>${s[1]}</td>                                   <!-- Name -->
+<td>${formatDOB(s[2])}</td>                        <!-- DOB safe -->
+<td>+91 ${s[3] ? s[3] : '-'}</td>                  <!-- Phone safe -->
+<td>${s[4] ? s[4] : '-'}</td>                      <!-- Email safe -->
 
 <td>
 
 <button onclick="viewStudent('${s[0]}')"><b>Profile</b></button>
 
-<button onclick="enableEdit('${s[0]}','${s[1]}','${s[2]}','${s[3]}')" class="edit-btn">
+<button onclick="enableEdit('${s[0]}','${s[1]}','${s[2]}','${s[3]}','${s[4]}')" class="edit-btn">
 <b>Edit</b>
 </button>
 
@@ -151,7 +159,6 @@ table.innerHTML+=`
 </td>
 
 </tr>
-
 `
 
 })
@@ -162,21 +169,30 @@ table.innerHTML+=`
 
 /* EDIT STUDENT */
 
-function enableEdit(id,name,phone,email){
+function enableEdit(id,name,dob,phone,email){
 
 let row = document.getElementById("row-"+id)
 
 row.innerHTML = `
 
 <td><input id="name-${id}" value="${name}" oninput="checkChange('${id}')"></td>
+<td>
+    <input type="date" id="dob-${id}"
+    value="${
+        dob 
+        ? new Date(new Date(dob).getTime() - new Date().getTimezoneOffset()*60000)
+        .toISOString().split('T')[0] : ''
+    }" 
+    oninput="checkChange('${id}')">
+</td>
 <td><input id="phone-${id}" value="${phone}" oninput="checkChange('${id}')"></td>
 <td><input id="email-${id}" value="${email}" oninput="checkChange('${id}')"></td>
 
 <td>
 
-<button id="save-${id}" onclick="saveEdit('${id}')" class="edit-btn" disabled>Save</button>
+<button id="save-${id}" onclick="saveEdit('${id}')" class="edit-btn" disabled><b>Save</b></button>
 
-<button onclick="cancelStudentEdit('${id}')" class="delete-btn">Cancel</button>
+<button onclick="cancelStudentEdit('${id}')" class="delete-btn"><b>Cancel</b></button>
 
 </td>
 
@@ -184,6 +200,7 @@ row.innerHTML = `
 
 /* STORE ORIGINAL VALUES */
 row.setAttribute("data-name", name)
+row.setAttribute("data-dob", dob)
 row.setAttribute("data-phone", phone)
 row.setAttribute("data-email", email)
 
@@ -194,10 +211,12 @@ function checkChange(id){
 let row = document.getElementById("row-"+id)
 
 let originalName = row.getAttribute("data-name")
+let originalDob = row.getAttribute("data-dob")
 let originalPhone = row.getAttribute("data-phone")
 let originalEmail = row.getAttribute("data-email")
 
 let newName = document.getElementById("name-"+id).value
+let newDob = document.getElementById("dob-"+id).value
 let newPhone = document.getElementById("phone-"+id).value
 let newEmail = document.getElementById("email-"+id).value
 
@@ -205,6 +224,7 @@ let saveBtn = document.getElementById("save-"+id)
 
 if(
 originalName !== newName ||
+originalDob !== newDob ||
 originalPhone !== newPhone ||
 originalEmail !== newEmail
 ){
@@ -307,13 +327,18 @@ function exportStudentPDF(){
 function saveEdit(id){
 
 let name = formatName(document.getElementById("name-"+id).value.trim())
+let dob = document.getElementById("dob-"+id).value
 let phone = document.getElementById("phone-"+id).value.trim()
 let email = document.getElementById("email-"+id).value.trim()
 
-if(!name.trim() || !phone.trim() || !email.trim()){
+if(!name.trim() || !dob || !phone.trim() || !email.trim()){
 
     if(!name.trim()){
         document.getElementById("name-"+id).classList.add("error-input")
+    }
+
+    if(!dob){
+        document.getElementById("dob-"+id).classList.add("error-input")
     }
 
     if(!phone.trim()){
@@ -394,6 +419,7 @@ body:JSON.stringify({
 action:"updateStudent",
 id:id,
 name:name,
+dob:dob,
 phone:phone,
 email:email
 })
@@ -491,6 +517,7 @@ document.addEventListener("input", function(e){
     /* ===== CREATE FORM ===== */
     if(
         e.target.id === "studentName" ||
+        e.target.id === "studentDob" ||
         e.target.id === "studentPhone" ||
         e.target.id === "studentEmail"
     ){
@@ -502,6 +529,7 @@ document.addEventListener("input", function(e){
     /* ===== EDIT MODE ===== */
     if(e.target.id && (
         e.target.id.startsWith("name-") ||
+        e.target.id.startsWith("dob-") ||
         e.target.id.startsWith("phone-") ||
         e.target.id.startsWith("email-")
     )){
@@ -517,24 +545,37 @@ function cancelStudentEdit(id){
     let row = document.getElementById("row-"+id)
 
     let name = row.getAttribute("data-name")
+    let dob = row.getAttribute("data-dob")
     let phone = row.getAttribute("data-phone")
     let email = row.getAttribute("data-email")
 
     row.innerHTML = `
-<td>${name}</td>
-<td>+91 ${phone}</td>
-<td>${email}</td>
+    <td>${name}</td>
+    <td>${formatDOB(dob)}</td>
+    <td>+91 ${phone}</td>
+    <td>${email}</td>
 
 <td>
 <button onclick="viewStudent('${id}')"><b>Profile</b></button>
 
-<button onclick="enableEdit('${id}','${name}','${phone}','${email}')" class="edit-btn">
-<b>Edit</b>
-</button>
+<button onclick="enableEdit('${id}','${name}','${dob}','${phone}','${email}')" class="edit-btn"><b>Edit</b></button>
 
 <button onclick="deleteStudent('${id}')" class="delete-btn">
 <b>Delete</b>
 </button>
 </td>
 `
+}
+
+function formatDOB(dob){
+
+    if(!dob) return "-"
+
+    let d = new Date(dob)
+
+    return d.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    })
 }

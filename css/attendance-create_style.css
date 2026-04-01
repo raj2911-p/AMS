@@ -354,3 +354,12 @@ padding:0 20px 30px 20px;
 }
 
 }
+
+.error-input{
+    border:2px solid red !important;
+    background:#fff0f0;
+}
+
+#attendanceTable tr.error-row{
+    background:#ffe5e5;
+}

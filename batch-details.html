@@ -94,6 +94,10 @@ Save Students
 
 <h2>Attendance History</h2>
 
+<button class="export-btn export-right" onclick="exportBatchFullPDF()">
+<b>Export PDF</b>
+</button>
+
 <table>
 
 <thead>
@@ -122,7 +126,7 @@ Save Students
 
 
 <script>
-window.onload = function(){
+window.onload=function(){
 
 const batchId = localStorage.getItem("attendanceBatch");
 
@@ -151,7 +155,7 @@ loadBatchAttendance()
 
 <script>
 
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("user")){
 window.location="login.html"
 }
 

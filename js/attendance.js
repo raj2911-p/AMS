@@ -206,53 +206,71 @@ table.innerHTML += `
 
 function submitAttendance(){
 
-let topic = document.getElementById("attTopic").value.trim()
+let date = document.getElementById("attDate")
+let start = document.getElementById("attStartTime")
+let end = document.getElementById("attEndTime")
+let topic = document.getElementById("attTopic")
 
-if (!topic) {
-    alert("Topic is required")
+// ❌ SAFETY CHECK
+if(!date || !start || !end || !topic){
+    console.error("Inputs not found")
+    alert("Something went wrong")
     return
 }
 
-let start = document.getElementById("attStartTime").value
-let end = document.getElementById("attEndTime").value
+let valid = true
 
-if (!start || !end) {
-    alert("Start and End time required")
-    return
-}
+/* =========================
+   🔴 EMPTY VALIDATION
+========================= */
 
-if (!topic && (!start || !end)) {
-    alert("Topic, Start Time and End Time is required")
-    return
-}
+let inputs = [date,start,end,topic]
 
-let rows=document.querySelectorAll("#attendanceTable tr")
+inputs.forEach(input=>{
+    if(!input.value || !input.value.trim()){
+        input.classList.add("error-input")
+        valid = false
+    }
+})
 
-let students=[]
+/* =========================
+   🔴 STUDENT VALIDATION
+========================= */
+
+let rows = document.querySelectorAll("#attendanceTable tr")
 
 rows.forEach(r=>{
 
-let id=r.querySelector("input").name
-let radios=r.querySelectorAll("input")
+    let radios = r.querySelectorAll("input[type='radio']")
+    let checked = false
 
-let status="Absent"
+    radios.forEach(rad=>{
+        if(rad.checked) checked = true
+    })
 
-radios.forEach(rad=>{
-if(rad.checked) status=rad.value
+    if(!checked){
+        r.style.background = "#ffe5e5"
+        valid = false
+    }else{
+        r.style.background = ""
+    }
+
 })
 
-students.push({
-studentId:id,
-status:status
-})
+if(!valid){
+    alert("All fields and attendance required")
+    return
+}
 
-})
-
-let selectedDate = document.getElementById("attDate").value
+/* =========================
+   🔁 DUPLICATE DATE CHECK
+========================= */
 
 fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
 .then(res=>res.json())
 .then(data=>{
+
+    let selectedDate = date.value
 
     let exists = data.some(s =>
         normalizeDate(s.date) === normalizeDate(selectedDate)
@@ -263,34 +281,52 @@ fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
         return
     }
 
-    // ✅ IF NOT EXISTS → THEN SAVE
-    saveAttendanceSession()
+    /* =========================
+       ✅ SAVE DATA
+    ========================= */
+
+    let students=[]
+
+    rows.forEach(r=>{
+        let id=r.querySelector("input").name
+        let radios=r.querySelectorAll("input")
+
+        let status="Absent"
+
+        radios.forEach(rad=>{
+            if(rad.checked) status=rad.value
+        })
+
+        students.push({
+            studentId:id,
+            status:status
+        })
+    })
+
+    fetch(API,{
+        method:"POST",
+        body:JSON.stringify({
+            action:"addAttendanceSession",
+            date:date.value,
+            time:start.value + " - " + end.value,
+            topic:topic.value,
+            batchId:batchId,
+            students:students
+        })
+    })
+    .then(res=>res.json())
+    .then(result=>{
+
+        if(result.status === "error"){
+            alert(result.message)
+            return
+        }
+
+        alert("Attendance Session Saved")
+        window.location="batch-details.html"
+    })
+
 })
-
-fetch(API,{
-method:"POST",
-body:JSON.stringify({
-
-action:"addAttendanceSession",
-date:document.getElementById("attDate").value,
-
-time:
-document.getElementById("attStartTime").value +" - " +
-document.getElementById("attEndTime").value,
-
-topic:document.getElementById("attTopic").value,
-
-batchId:localStorage.getItem("attendanceBatch"),
-students:students
-
-})
-})
-
-.then(()=>{
-alert("Attendance Session Saved")
-window.location="batch-details.html"
-})
-
 }
 
 /* SEARCH STUDENT */
@@ -771,4 +807,182 @@ function checkSessionChange(sessionId){
 
     // 🔥 ENABLE / DISABLE BUTTON
     saveBtn.disabled = !changed
+}
+
+function deleteSession(sessionId){
+
+    if(!confirm("Are you sure you want to delete this attendance?")){
+        return
+    }
+
+    fetch(API,{
+        method:"POST",
+        body:JSON.stringify({
+            action:"deleteAttendanceSession",
+            sessionId:sessionId
+        })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        if(data.status === "success"){
+            alert("Attendance deleted successfully")
+
+            // 🔥 refresh everywhere
+            loadBatchAttendance()
+        }
+        else{
+            alert("Delete failed")
+        }
+
+    })
+}
+
+async function exportBatchFullPDF(){
+
+try{
+
+let batchId = localStorage.getItem("attendanceBatch")
+
+if(!batchId){
+    alert("Batch not found")
+    return
+}
+
+/* =========================
+   🔹 GET BATCH INFO
+========================= */
+
+let batchRes = await fetch(API+"?action=getBatches")
+let batchData = await batchRes.json()
+
+let batch = batchData.slice(1).find(b => b[0] == batchId)
+
+let batchName = batch ? batch[1] : ""
+let faculty = batch ? batch[2] : "Not Assigned"
+
+/* =========================
+   🔹 GET SESSIONS
+========================= */
+
+let sessionRes = await fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
+let sessions = await sessionRes.json()
+
+if(!sessions.length){
+    alert("No attendance data found")
+    return
+}
+
+// SORT DATE
+sessions.sort((a,b)=> new Date(a.date) - new Date(b.date))
+
+let content = ""
+
+/* =========================
+   🔹 LOOP EACH SESSION
+========================= */
+
+for(let s of sessions){
+
+    let res = await fetch(API+"?action=getSessionAttendance&sessionId="+s.sessionId)
+    let students = await res.json()
+
+    let formattedDate = new Date(s.date).toLocaleDateString("en-GB", {
+        day:"2-digit",month:"short",year:"numeric"
+    })
+
+    let rows = ""
+
+    students.forEach(st=>{
+        rows += `
+        <tr>
+            <td>${st.student}</td>
+            <td>${st.status}</td>
+        </tr>`
+    })
+
+    content += `
+    <div class="session-block">
+        <h3>Date: ${formattedDate}</h3>
+        <p><b>Time:</b> ${s.time}</p>
+        <p><b>Topic:</b> ${s.topic}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Students Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    </div>`
+}
+
+/* =========================
+   🔹 FINAL HTML
+========================= */
+
+let html = `
+<html>
+<head>
+<title>Attendance Report</title>
+
+<style>
+body{font-family:Arial;padding:20px;}
+.header{text-align:center;margin-bottom:20px;}
+.logo{position:absolute;left:20px;top:20px;}
+.logo img{width:100%; height:60px;}
+.session-block{margin-top:25px;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{border:2px solid #ccc;padding:8px;}
+th{background:#eee; text-align:left;}
+</style>
+
+</head>
+
+<body>
+
+<div class="logo">
+<img src="logo.png">
+</div>
+
+<div class="header">
+<h1 style="text-align:center;">Attendance Report</h1>
+</div>
+
+<h2 style="margin-top: 60px;">Batch Name: ${batchName}</h2>
+<h2 style="margin-bottom: 55px;">Faculty: ${faculty}</h2>
+
+${content}
+
+</body>
+</html>
+`
+
+/* =========================
+   🔹 OPEN WINDOW
+========================= */
+
+let win = window.open("", "_blank")
+
+if(!win){
+    alert("Popup blocked! Allow popups.")
+    return
+}
+
+win.document.open()
+win.document.write(html)
+win.document.close()
+
+// WAIT BEFORE PRINT
+setTimeout(()=>{
+    win.print()
+},300)
+
+}catch(err){
+    console.error(err)
+    alert("Export failed")
+}
+
 }

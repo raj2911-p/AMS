@@ -1,0 +1,166 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',system-ui,sans-serif;
+}
+
+body{
+background:#f1f5f9;
+color:#333;
+}
+
+/* ===== PAGE CONTAINER ===== */
+
+.profile-container{
+padding:40px;
+}
+
+/* ===== TITLE ===== */
+
+.profile-container h2{
+color:#1e3a8a;
+margin-bottom:20px;
+font-weight:700;
+}
+
+/* ===== PROFILE CARD ===== */
+
+.profile-card{
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+max-width:700px;
+border-left:5px solid #2563eb;
+transition:0.3s;
+}
+
+.profile-card:hover{
+transform:translateY(-4px);
+box-shadow:0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* ===== FORM GRID ===== */
+
+.profile-card{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+/* FULL WIDTH FIELD */
+
+.form-group.full{
+grid-column:1/3;
+}
+
+/* ===== LABEL ===== */
+
+.form-group label{
+display:block;
+margin-bottom:6px;
+font-weight:600;
+color:#64748b;
+}
+
+/* ===== INPUT ===== */
+
+.form-group input{
+width:100%;
+padding:10px 12px;
+border-radius:6px;
+border:1px solid #ccc;
+transition:0.25s;
+}
+
+/* INPUT FOCUS */
+
+.form-group input:focus{
+outline:none;
+border-color:#2563eb;
+box-shadow:0 0 0 2px rgba(37,99,235,0.15);
+}
+
+/* DISABLED INPUT */
+
+input:disabled{
+background:#f1f5f9;
+cursor:not-allowed;
+}
+
+/* ===== BUTTON GROUP ===== */
+
+.btn-group{
+grid-column:1/3;
+display:flex;
+gap:12px;
+margin-top:10px;
+}
+
+/* ===== BUTTON BASE ===== */
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:500;
+transition:0.25s;
+}
+
+/* EDIT BUTTON */
+
+#editBtn{
+background:#2563eb;
+color:white;
+}
+
+#editBtn:hover{
+background:#1e40af;
+transform:translateY(-1px);
+}
+
+/* UPDATE BUTTON */
+
+#updateBtn{
+background:#16a34a;
+color:white;
+opacity:0.6;
+cursor:not-allowed;
+}
+
+#updateBtn.active{
+opacity:1;
+cursor:pointer;
+}
+
+#updateBtn.active:hover{
+background:#15803d;
+transform:translateY(-1px);
+}
+
+/* ===== MESSAGE ===== */
+
+#msg{
+grid-column:1/3;
+margin-top:10px;
+font-weight:600;
+color:#16a34a;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:700px){
+
+.profile-card{
+grid-template-columns:1fr;
+}
+
+.form-group.full,
+.btn-group,
+#msg{
+grid-column:1;
+}
+
+}

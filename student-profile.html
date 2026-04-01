@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Profile</title>
 
 <link rel="stylesheet" href="css/student-profile_style.css">
@@ -42,6 +45,8 @@
 
 <h3> Student Name: <span id="studentName" title=""></span></h3>
 
+<h4>Date of Birth: <span id="studentDob"></span></h4>
+<br>
 <h4>Mobile No.: +91 <span id="studentPhone"></span></h4>
 <br>
 <h4>Email-ID: <span id="studentEmail"></span></h4>
@@ -95,7 +100,7 @@ Attendance History
 <script src="js/student-profile.js"></script>
 
 <script>
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("user")){
 window.location="login.html"
 }
 </script>

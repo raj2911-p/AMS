@@ -59,6 +59,8 @@ Students Management
 
 <input id="studentName" placeholder="Student Name">
 
+<input type="date" id="studentDob" placeholder="Date of Birth">
+
 <input id="studentPhone" placeholder="Mobile Number">
 
 <input id="studentEmail" placeholder="Email Address">
@@ -87,7 +89,8 @@ Create Student
 <thead>
 
 <tr>
-<th>Name</th>
+<th>Students Name</th>
+<th>Date of Birth</th>
 <th>Mobile No.</th>
 <th>Email-ID</th>
 <th>Action</th>
@@ -111,7 +114,7 @@ Create Student
 
 <script>
 
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("user")){
 window.location="login.html"
 }
 

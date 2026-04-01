@@ -1,5 +1,6 @@
 window.onload = function () {
 
+loadTodayBirthdays()
 loadCounts()
 updateTime()
 setInterval(updateTime,1000)
@@ -169,12 +170,113 @@ now.toLocaleDateString()+" | "+now.toLocaleTimeString()
 
 }
 
+/* ================= BIRTHDAY REMINDER ================= */
+
+function loadTodayBirthdays(){
+
+fetch(API + "?action=getStudents")
+.then(res => res.json())
+.then(data => {
+
+    let today = new Date()
+
+    let todayDay = today.getDate()
+    let todayMonth = today.getMonth() + 1
+
+    let container = document.getElementById("birthdayList")
+
+    let html = ""
+    let found = false
+
+    data.slice(1).forEach(s => {
+
+        let name = s[1]
+        let dob = s[2]
+        let phone = s[3]
+
+        if(!dob) return
+
+        let d = new Date(dob)
+
+        let day = d.getDate()
+        let month = d.getMonth() + 1
+
+        if(day === todayDay && month === todayMonth){
+
+            found = true
+
+            let message = `✨*Happy Birthday ${name}!*✨\n🎉🎂🎁🎈🥳🎊\nOn Your Special Day May God Bless You with lots of\nHappiness 😊,\nJoy 😂,\nPeace ✌🏻,\nSuccess 🏆💯 and\n💪 Good Health 👍...\nWish you a great year ahead 👍🏻😊\n\nWarm Regards,\n*SITH*\n*(Suhradam Information Technology Hub).*`
+            let whatsappLink = `https://api.whatsapp.com/send?phone=91${phone}&text=${encodeWhatsAppMessage(message)}`
+
+            html += `
+            <div class="birthday-item">
+                <span>${name}</span>
+                <div class="wish-line">
+                    <b>Send Wishes 👉</b> 
+                    <a href="${whatsappLink}" target="_blank" class="whatsapp-btn">
+                        <img src="js/whatsapp.png" alt="whatsapp">
+                    </a>
+                </div>
+            </div>
+            `
+        }
+
+    })
+
+    if(!found){
+        html = "<p>No birthdays today 🎉</p>"
+    }
+
+    container.innerHTML = html
+
+})
+}
+
+function encodeWhatsAppMessage(msg){
+    return encodeURIComponent(msg).replace(/'/g,"%27").replace(/"/g,"%22")
+}
+
+// SET USERNAME
+document.addEventListener("DOMContentLoaded", () => {
+
+let user = localStorage.getItem("user") || "Admin"
+document.getElementById("adminName").innerText = user
+
+})
+
+
+// TOGGLE DROPDOWN
+document.getElementById("adminBox").addEventListener("click", function(e){
+
+let dropdown = document.getElementById("dropdown")
+
+dropdown.style.display =
+dropdown.style.display === "block" ? "none" : "block"
+
+e.stopPropagation()
+
+})
+
+
+// CLOSE WHEN CLICK OUTSIDE
+document.addEventListener("click", function(){
+
+document.getElementById("dropdown").style.display = "none"
+
+})
+
+
+// PROFILE
+function openProfile(){
+
+localStorage.removeItem("createMode")   // ✅ VERY IMPORTANT
+
+window.location = "profile.html"
+}
+
 
 /* ================= LOGOUT ================= */
-
 function logout(){
-
-localStorage.removeItem("admin")
-window.location="login.html"
-
+localStorage.clear()
+window.location = "login.html"
 }

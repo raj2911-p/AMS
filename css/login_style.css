@@ -79,9 +79,11 @@ box-shadow:0 0 6px rgba(37,99,235,0.3);
 /* ===== BUTTON ===== */
 
 .login-box button{
-width:100%;
-padding:12px;
+width:47%;
+padding:15px;
 margin-top:20px;
+margin-left: 2px;
+margin-right: 2px;
 background:#2563eb;
 color:white;
 border:none;
@@ -120,6 +122,95 @@ transform:translateY(0);
 }
 }
 
+/* ===== MODAL BACKGROUND ===== */
+.modal{
+position: fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+}
+
+/* ACTIVE */
+.modal.show{
+opacity:1;
+pointer-events:auto;
+}
+
+/* CARD */
+.modal-card{
+background:#fff;
+padding:25px;
+border-radius:10px;
+width:300px;
+text-align:center;
+transform:scale(0.7);
+transition:0.3s;
+}
+
+/* ANIMATION */
+.modal.show .modal-card{
+transform:scale(1);
+}
+
+/* INPUT */
+.modal-card input{
+width:100%;
+margin:10px 0;
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+/* BUTTONS */
+.modal-buttons{
+display:flex;
+justify-content:space-between;
+margin-top:10px;
+}
+
+.modal-buttons button{
+flex:1;
+margin:5px;
+padding:10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.modal-buttons button:first-child{
+background:#0ea5a4;
+color:white;
+}
+
+.modal-buttons button:last-child{
+background:#ccc;
+}
+
+.forgot-link{
+text-align: left;
+color: blue;
+margin-top: 10px;
+cursor: pointer;
+
+/* smooth animation */
+transition: transform 0.25s ease, color 0.2s ease;
+}
+
+/* 🔥 HOVER EFFECT (upar + halka zoom) */
+.forgot-link:hover{
+transform: translateY(-3px) scale(1.00);
+color: #1d4ed8;
+text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablet */
@@ -128,6 +219,17 @@ transform:translateY(0);
 
 .login-box{
 padding:35px 25px;
+}
+
+.login-box{
+background: white;
+padding: 100px 45px;
+width: 70%;
+height: 700px;
+border-radius: 12px;
+box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+text-align: center;
+transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 .logo{
@@ -150,10 +252,14 @@ align-items:center;
 /* make card large */
 
 .login-box{
-width:100%;
-max-width:100%;
-padding:40px 25px;
-border-radius:16px;
+background: white;
+padding: 100px 45px;
+width: 70%;
+height: 700px;
+border-radius: 12px;
+box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+text-align: center;
+transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 /* bigger logo */

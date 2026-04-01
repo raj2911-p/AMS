@@ -241,6 +241,58 @@ transform:translateY(0);
 }
 }
 
+.export-btn{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:10px 16px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-size:14px;
+
+margin-bottom:15px;
+
+transition:0.3s;
+
+}
+
+.export-btn:hover{
+
+background:#1e40af;
+
+transform:translateY(-2px);
+
+box-shadow:0 6px 20px rgba(37,99,235,0.4);
+
+}
+
+.export-btn:active{
+    transform:scale(0.97);
+}
+
+.export-container{
+
+display:flex;
+
+justify-content:flex-end;  /* shifts button to right */
+
+margin-bottom:15px;
+
+}
+
+.export-right{
+display:block;
+margin-left:auto;
+margin-bottom:15px;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:900px){

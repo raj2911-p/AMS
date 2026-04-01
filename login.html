@@ -3,6 +3,9 @@
 
 <head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Admin Login</title>
 
 <link rel="stylesheet" href="css/login_style.css">
@@ -22,20 +25,43 @@
 
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<h4 class="forgot-link" style="text-align: left; color: blue; margin-top: 10px;" onclick="forgot()">Forgot Password ?</h4>
+
+<button onclick="login()"><b>Login</b></button>
+
+<button onclick="register()"><b>Create Faculty Login</b></button>
 
 <p id="msg"></p>
 
 </div>
 
+<!-- ✅ ADMIN VERIFY MODAL -->
+<div id="adminModal" class="modal">
+  <div class="modal-card">
+    <h3>Admin Verification</h3>
+
+    <input id="adminUser" placeholder="Enter Admin Username">
+    <input id="adminPass" type="password" placeholder="Enter Admin Password">
+
+    <div class="modal-buttons">
+      <button onclick="verifyAdmin()">OK</button>
+      <button onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script src="js/config.js"></script>
 
 <script>
-
 function login(){
 
-let username=document.getElementById("username").value
-let password=document.getElementById("password").value
+let username=document.getElementById("username").value.trim()
+let password=document.getElementById("password").value.trim()
+
+if(!username || !password){
+document.getElementById("msg").innerText="All fields required"
+return
+}
 
 fetch(API,{
 method:"POST",
@@ -45,15 +71,21 @@ username:username,
 password:password
 })
 })
-
 .then(res=>res.json())
 .then(data=>{
 
 if(data.status=="success"){
 
-localStorage.setItem("admin","true")
+localStorage.setItem("user",data.username.trim())
+localStorage.setItem("role",data.role)
 
+localStorage.removeItem("createMode")   // ✅ ADD THIS
 window.location="dashboard.html"
+
+}
+else if(data.status=="pending"){
+
+document.getElementById("msg").innerText="Waiting for Admin Approval"
 
 }
 else{
@@ -63,9 +95,170 @@ document.getElementById("msg").innerText="Invalid Login"
 }
 
 })
+}
+
+/* REGISTER */
+function register(){
+
+document.getElementById("adminModal").classList.add("show")
+
+if(!adminUser || !adminPass){
+alert("Admin credentials required")
+return
+}
+
+/* VERIFY ADMIN FIRST */
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"login",
+username:adminUser,
+password:adminPass
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+if(res.status=="success" && res.role=="Admin"){
+
+/* OPEN PROFILE PAGE IN CREATE MODE */
+localStorage.setItem("createMode","true")
+window.location="profile.html"
+
+}else{
+alert("Invalid Admin Credentials ❌")
+}
+
+})
 
 }
 
+/* FORGOT PASSWORD */
+function forgot(){
+
+let username = prompt("Enter Username")
+
+if(!username){
+alert("Username required")
+return
+}
+
+/* SEND OTP */
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"sendOTP",
+username:username
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+if(res.status !== "sent"){
+alert("User not found ❌")
+return
+}
+
+let otp = prompt("Enter OTP")
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"verifyOTP",
+username:username,
+otp:otp
+})
+})
+.then(r=>r.json())
+.then(v=>{
+
+if(v.status === "expired"){
+alert("OTP expired ❌")
+return
+}
+
+if(v.status === "blocked"){
+alert("Too many attempts ❌")
+return
+}
+
+if(v.status !== "verified"){
+alert("Invalid OTP ❌")
+return
+}
+
+/* RESET PASSWORD */
+if(v.status === "verified"){
+
+let newPass = prompt("Enter New Password (min 8 characters)")
+
+if(!newPass || newPass.trim().length < 8){
+alert("Password must be at least 8 characters ❌")
+return
+}
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"forgotPassword",
+username:username,
+newPassword:newPass
+})
+})
+.then(r=>r.json())
+.then(d=>{
+if(d.status=="success"){
+alert("Password Reset Successful ✅")
+}else{
+alert("Error ❌")
+}
+})
+
+}
+
+})
+
+})
+}
+
+function closeModal(){
+document.getElementById("adminModal").classList.remove("show")
+}
+
+function verifyAdmin(){
+
+let adminUser = document.getElementById("adminUser").value.trim()
+let adminPass = document.getElementById("adminPass").value.trim()
+
+if(!adminUser || !adminPass){
+alert("All fields required")
+return
+}
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"login",
+username:adminUser,
+password:adminPass
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+if(res.status=="success" && res.role=="Admin"){
+
+closeModal()
+
+localStorage.setItem("createMode","true")
+window.location="profile.html"
+
+}else{
+alert("Invalid Admin Credentials ❌")
+}
+
+})
+}
 </script>
 
 </body>

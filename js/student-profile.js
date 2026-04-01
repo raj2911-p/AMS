@@ -1,6 +1,7 @@
 const studentId = localStorage.getItem("studentProfile")
 
 let studentNameGlobal = ""
+let studentDobGlobal = ""
 let studentPhoneGlobal = ""
 let studentEmailGlobal = ""
 
@@ -20,8 +21,9 @@ fetch(API+"?action=getBatches").then(res=>res.json())
 students.forEach(s=>{
 if(s[0]==studentId){
 studentNameGlobal = s[1]
-studentPhoneGlobal = s[2]
-studentEmailGlobal = s[3]
+studentDobGlobal = s[2]      // ✅ NEW
+studentPhoneGlobal = s[3]
+studentEmailGlobal = s[4]
 }
 })
 
@@ -33,6 +35,7 @@ return
 /* SET DETAILS */
 document.getElementById("studentName").innerText = studentNameGlobal
 document.getElementById("studentName").title = studentNameGlobal
+document.getElementById("studentDob").innerText = formatDOB(studentDobGlobal) 
 document.getElementById("studentPhone").innerText = studentPhoneGlobal
 document.getElementById("studentEmail").innerText = studentEmailGlobal
 
@@ -209,6 +212,7 @@ function exportFullStudentProfile(){
     try{
 
         let name = document.querySelector("#studentName")?.innerText || ""
+        let dob = document.querySelector("#studentDob")?.innerText || ""
         let mobile = document.querySelector("#studentPhone")?.innerText || ""
         let email = document.querySelector("#studentEmail")?.innerText || ""
         let percent = document.querySelector("#attendancePercent")?.innerText || "0%"
@@ -310,6 +314,7 @@ function exportFullStudentProfile(){
             <div class="card">
 
                 <h3>Student Name: ${name}</h3>
+                <h3>Date of Birth: ${dob}</h3>
                 <h3>Mobile No.: +91 ${mobile}</h3>
                 <h3>Email-ID: ${email}</h3>
                 <h3>Attendance %: <span class="percent-text">${percent}</span></h3>
@@ -351,10 +356,23 @@ function exportFullStudentProfile(){
 
         setTimeout(()=>{
             win.print()
-        },500)
+        },300)
 
     }catch(err){
         console.error(err)
         alert("Export failed")
     }
+}
+
+function formatDOB(dob){
+
+    if(!dob) return "-"
+
+    let d = new Date(dob)
+
+    return d.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    })
 }

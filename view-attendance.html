@@ -56,13 +56,16 @@
 
 <div class="student-table">
 
-<h2>Student Attendance</h2>
+<h2>Students Attendance</h2>
+<button class="export-btn export-right" onclick="exportSingleAttendancePDF()">
+<b>Export PDF</b>
+</button>
 
 <table>
 
 <thead>
 <tr>
-<th>Student</th>
+<th>Students Name</th>
 <th>Status</th>
 </tr>
 </thead>
@@ -93,7 +96,7 @@ Absent : <b id="absentCount">0</b>
 <script src="js/view-attendence.js"></script>
 
 <script>
-if(!localStorage.getItem("admin")){
+if(!localStorage.getItem("user")){
 window.location="login.html"
 }
 </script>

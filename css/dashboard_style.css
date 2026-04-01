@@ -186,6 +186,105 @@ button:hover{
 transform:translateY(-1px);
 }
 
+.birthday-box{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    margin:20px auto;   /* center */
+    width: 60%;         /* 👈 width control */
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.birthday-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    border-bottom:1px solid #eee;
+}
+
+.birthday-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    border-bottom:1px solid #eee;
+}
+
+/* ✅ WhatsApp Button */
+.whatsapp-btn{
+    width:45px;
+    height:45px;
+    background:#25D366;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;   /* 🔥 important */
+     transition: all 0.3s ease;
+}
+
+/* ✅ Image fit fix */
+.whatsapp-btn img{
+    width:45px;
+    height:45px;
+    object-fit:contain;
+    transition: all 0.3s ease;
+}
+
+/* 🎯 HOVER EFFECT */
+.whatsapp-btn:hover{
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+}
+
+/* ICON ANIMATION */
+.whatsapp-btn:hover img{
+    transform: rotate(10deg) scale(1.1);
+}
+
+.wish-line{
+    display:flex;
+    align-items:center;
+    gap:8px;   /* spacing between text & icon */
+}
+
+.whatsapp-btn{
+    transition:0.3s ease;
+}
+
+/* ===== DROPDOWN ===== */
+
+.admin{
+position:relative;
+cursor:pointer;
+}
+
+.dropdown{
+display:none;
+position:absolute;
+top:50px;
+right:0;
+background:white;
+color:#333;
+min-width:150px;
+border-radius:8px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+overflow:hidden;
+z-index:1000;
+}
+
+.dropdown p{
+padding:12px;
+margin:0;
+cursor:pointer;
+transition:0.2s;
+}
+
+.dropdown p:hover{
+background:#f1f5f9;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:1000px){
