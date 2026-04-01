@@ -1,10 +1,31 @@
+const API = "https://script.google.com/macros/s/XXXXX/exec"
+const PROXY = "https://api.allorigins.win/raw?url="
+
+function apiGet(params){
+  let url = API + "?" + new URLSearchParams(params).toString()
+  return fetch(PROXY + encodeURIComponent(url))
+    .then(res => res.text())
+    .then(text => {
+      try{return JSON.parse(text)}catch(e){return []}
+    })
+}
+
+function apiPost(data){
+  return apiPost({
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  }).then(res=>res.json())
+}
+
+
 let batchId = localStorage.getItem("attendanceBatch")
 
 window.onload=function(){
 
 if(document.getElementById("batchTitle")){
 
-fetch(API+"?action=getBatches")
+apiGet({action:"getBatches"})
 
 .then(res=>res.json())
 
@@ -41,7 +62,7 @@ loadAllStudents()
 
 function loadAllStudents(){
 
-fetch(API+"?action=getStudents")
+apiGet({action:"getStudents"})
 .then(res=>res.json())
 .then(students=>{
 
@@ -126,7 +147,7 @@ fetch(API+"?action=getBatchStudents&batchId="+batchId)
     }
 
     /* ✅ ADD ONLY NEW */
-    fetch(API,{
+    apiPost({
         method:"POST",
         body:JSON.stringify({
             action:"addBatchStudents",
@@ -303,7 +324,7 @@ fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
         })
     })
 
-    fetch(API,{
+    apiPost({
         method:"POST",
         body:JSON.stringify({
             action:"addAttendanceSession",
@@ -611,7 +632,7 @@ function saveSession(sessionId){
             }))
 
             // 👉 UPDATE API
-            fetch(API,{
+            apiPost({
                 method:"POST",
                 body:JSON.stringify({
                     action:"updateAttendanceSession",
@@ -756,7 +777,7 @@ status:status
 })
 })
 
-fetch(API,{
+apiPost({
 method:"POST",
 body:JSON.stringify({
 action:"addAttendanceSession",
@@ -815,7 +836,7 @@ function deleteSession(sessionId){
         return
     }
 
-    fetch(API,{
+    apiPost({
         method:"POST",
         body:JSON.stringify({
             action:"deleteAttendanceSession",
@@ -853,7 +874,7 @@ if(!batchId){
    🔹 GET BATCH INFO
 ========================= */
 
-let batchRes = await fetch(API+"?action=getBatches")
+let batchRes = await apiGet({action:"getBatches"})
 let batchData = await batchRes.json()
 
 let batch = batchData.slice(1).find(b => b[0] == batchId)

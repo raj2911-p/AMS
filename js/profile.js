@@ -1,3 +1,24 @@
+const API = "https://script.google.com/macros/s/XXXXX/exec"
+const PROXY = "https://api.allorigins.win/raw?url="
+
+function apiGet(params){
+  let url = API + "?" + new URLSearchParams(params).toString()
+  return fetch(PROXY + encodeURIComponent(url))
+    .then(res => res.text())
+    .then(text => {
+      try{return JSON.parse(text)}catch(e){return []}
+    })
+}
+
+function apiPost(data){
+  return apiPost({
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  }).then(res=>res.json())
+}
+
+
 let originalData = {}
 
 let createMode = localStorage.getItem("createMode") === "true"
@@ -126,7 +147,7 @@ courses: capitalizeWords(document.getElementById("courses").value.trim())
 /* VALIDATION */
 if(!validateForm(data)) return
 
-fetch(API,{
+apiPost({
 method:"POST",
 body:JSON.stringify(data)
 })

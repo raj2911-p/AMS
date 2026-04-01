@@ -1,3 +1,24 @@
+const API = "https://script.google.com/macros/s/XXXXX/exec"
+const PROXY = "https://api.allorigins.win/raw?url="
+
+function apiGet(params){
+  let url = API + "?" + new URLSearchParams(params).toString()
+  return fetch(PROXY + encodeURIComponent(url))
+    .then(res => res.text())
+    .then(text => {
+      try{return JSON.parse(text)}catch(e){return []}
+    })
+}
+
+function apiPost(data){
+  return apiPost({
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  }).then(res=>res.json())
+}
+
+
 window.onload=function(){
 
 loadStudents()
@@ -95,7 +116,7 @@ return
 
 /* ===== CREATE STUDENT ===== */
 
-fetch(API,{
+apiPost({
 method:"POST",
 body:JSON.stringify({
 action:"addStudent",
@@ -126,7 +147,7 @@ alert("Error while checking data")
 
 function loadStudents(){
 
-fetch(API+"?action=getStudents")
+apiGet({action:"getStudents"})
 .then(res=>res.json())
 .then(data=>{
 
@@ -413,7 +434,7 @@ return
 
 /*==== UPDATE ====*/
 
-fetch(API,{
+apiPost({
 method:"POST",
 body:JSON.stringify({
 action:"updateStudent",
@@ -440,7 +461,7 @@ function deleteStudent(id){
 
 if(confirm("Are you sure to delete this student?")){
 
-fetch(API,{
+apiPost({
 method:"POST",
 body:JSON.stringify({
 action:"deleteStudent",

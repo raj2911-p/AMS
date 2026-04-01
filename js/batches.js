@@ -1,3 +1,24 @@
+const API = "https://script.google.com/macros/s/XXXXX/exec"
+const PROXY = "https://api.allorigins.win/raw?url="
+
+function apiGet(params){
+  let url = API + "?" + new URLSearchParams(params).toString()
+  return fetch(PROXY + encodeURIComponent(url))
+    .then(res => res.text())
+    .then(text => {
+      try{return JSON.parse(text)}catch(e){return []}
+    })
+}
+
+function apiPost(data){
+  return apiPost({
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  }).then(res=>res.json())
+}
+
+
 window.onload = function () {
     loadBatch()
 }
@@ -37,7 +58,7 @@ function createBatch(){
     return
     }
 
-    fetch(API+"?action=getBatches")
+    apiGet({action:"getBatches"})
     .then(res=>res.json())
     .then(data=>{
 
@@ -54,7 +75,7 @@ function createBatch(){
             return
         }
 
-        fetch(API,{
+        apiPost({
             method:"POST",
             body:JSON.stringify({
                 action:"createBatch",
@@ -80,7 +101,7 @@ function createBatch(){
 
 function loadBatch(){
 
-    fetch(API+"?action=getBatches")
+    apiGet({action:"getBatches"})
     .then(res=>res.json())
     .then(data=>{
 
@@ -198,7 +219,7 @@ function saveBatchEdit(id){
     }
 
     // 👉 STEP 3: duplicate check
-    fetch(API+"?action=getBatches")
+    apiGet({action:"getBatches"})
     .then(res=>res.json())
     .then(data=>{
 
@@ -219,7 +240,7 @@ function saveBatchEdit(id){
         }
 
         // 👉 STEP 4: update
-        fetch(API,{
+        apiPost({
             method:"POST",
             body:JSON.stringify({
                 action:"updateBatch",
@@ -246,7 +267,7 @@ function deleteBatch(id){
 
         console.log("Deleting ID:", id)   // 🔥 yaha add kiya
 
-        fetch(API,{
+        apiPost({
             method:"POST",
             body:JSON.stringify({
                 action:"deleteBatch",
