@@ -154,8 +154,10 @@ username:username
 .then(res=>res.json())
 .then(res=>{
 
+console.log("OTP RESPONSE:", res)   // 🔥 ADD THIS
+
 if(res.status !== "sent"){
-alert("User not found ❌")
+alert(res.message || "Error ❌")
 return
 }
 
