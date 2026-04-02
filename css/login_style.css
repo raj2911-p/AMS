@@ -211,6 +211,78 @@ color: #1d4ed8;
 text-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal.show {
+  display:flex;
+}
+
+.modal-card {
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
+  text-align:center;
+}
+
+.modal-card input {
+  width:90%;
+  padding:10px;
+  margin:10px 0;
+}
+
+/* 🔘 COMMON BUTTON STYLE */
+.modal-card button {
+  padding: 10px 16px;
+  margin: 8px 5px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* ✅ PRIMARY BUTTON (OK / Submit) */
+.modal-card button:first-of-type {
+  background: #0ea5a4;
+  color: white;
+}
+
+.modal-card button:first-of-type:hover {
+  background: #0b8c8b;
+  transform: scale(1.05);
+}
+
+/* ❌ SECONDARY BUTTON (Cancel) */
+.modal-card button:last-of-type {
+  background: #e5e5e5;
+  color: #333;
+}
+
+.modal-card button:last-of-type:hover {
+  background: #cfcfcf;
+  transform: scale(1.05);
+}
+
+/* 🌟 BUTTON SHADOW + EFFECT */
+.modal-card button {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* CLICK EFFECT */
+.modal-card button:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablet */

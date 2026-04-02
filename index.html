@@ -25,7 +25,7 @@
 
 <input id="password" type="password" placeholder="Password">
 
-<h4 class="forgot-link" style="text-align: left; color: blue; margin-top: 10px;" onclick="forgot()">Forgot Password ?</h4>
+<h4 class="forgot-link" style="text-align: left; color: blue; margin-top: 10px;" onclick="openForgot()">Forgot Password ?</h4>
 
 <button onclick="login()"><b>Login</b></button>
 
@@ -47,6 +47,34 @@
       <button onclick="verifyAdmin()">OK</button>
       <button onclick="closeModal()">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- 🔐 FORGOT PASSWORD MODAL -->
+<div id="forgotModal" class="modal">
+  <div class="modal-card">
+    <h3>Reset Password</h3>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <input id="fpUsername" placeholder="Enter Username">
+      <button onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" style="display:none;">
+      <input id="fpOtp" placeholder="Enter OTP">
+      <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" style="display:none;">
+      <input id="fpNewPass" type="password" placeholder="New Password">
+      <button onclick="resetPassword()">Reset Password</button>
+    </div>
+
+    <br>
+    <button onclick="closeForgot()">Cancel</button>
   </div>
 </div>
 
@@ -211,6 +239,7 @@ newPassword:newPass
 .then(d=>{
 if(d.status=="success"){
 alert("Password Reset Successful ✅")
+closeForgotModal() 
 }else{
 alert("Error ❌")
 }
@@ -225,6 +254,9 @@ alert("Error ❌")
 
 function closeModal(){
 document.getElementById("adminModal").classList.remove("show")
+
+document.getElementById("adminUser").value = ""
+document.getElementById("adminPass").value = ""
 }
 
 function verifyAdmin(){
@@ -250,6 +282,9 @@ password:adminPass
 
 if(res.status=="success" && res.role=="Admin"){
 
+document.getElementById("adminUser").value = ""
+document.getElementById("adminPass").value = ""
+
 closeModal()
 
 localStorage.setItem("createMode","true")
@@ -260,6 +295,151 @@ alert("Invalid Admin Credentials ❌")
 }
 
 })
+}
+
+let fpUser = ""
+
+/* OPEN MODAL */
+function openForgot(){
+document.getElementById("forgotModal").classList.add("show")
+resetForgotModal()   // ✅ bas ye hi kaafi hai
+}
+
+/* CLOSE */
+function closeForgot(){
+document.getElementById("forgotModal").classList.remove("show")
+resetForgotModal()
+}
+
+/* SEND OTP */
+function sendOTP(){
+
+fpUser = document.getElementById("fpUsername").value
+.toLowerCase()
+.replace(/\s/g,"")
+.trim()
+
+if(!fpUser){
+alert("Enter username ❌")
+return
+}
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"sendOTP",
+username:fpUser
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+console.log(res)
+
+if(res.status !== "sent"){
+alert(res.message || "Error ❌")
+return
+}
+
+/* NEXT STEP */
+document.getElementById("step1").style.display="none"
+document.getElementById("step2").style.display="block"
+
+})
+}
+
+/* VERIFY OTP */
+function verifyOTP(){
+
+let otp = document.getElementById("fpOtp").value.trim()
+
+if(!otp){
+alert("Enter OTP ❌")
+return
+}
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"verifyOTP",
+username:fpUser,
+otp:otp
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+if(res.status === "expired"){
+alert("OTP expired ❌")
+return
+}
+
+if(res.status === "blocked"){
+alert("Too many attempts ❌")
+return
+}
+
+if(res.status !== "verified"){
+alert("Invalid OTP ❌")
+return
+}
+
+document.getElementById("fpOtp").value = ""
+
+/* NEXT STEP */
+document.getElementById("step2").style.display="none"
+document.getElementById("step3").style.display="block"
+
+})
+}
+
+/* RESET PASSWORD */
+function resetPassword(){
+
+let newPass = document.getElementById("fpNewPass").value.trim()
+
+if(!newPass || newPass.length < 8){
+alert("Min 8 characters ❌")
+return
+}
+
+fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"forgotPassword",
+username:fpUser,
+newPassword:newPass
+})
+})
+.then(res=>res.json())
+.then(res=>{
+
+if(res.status=="success"){
+document.getElementById("fpNewPass").value = ""
+alert("Password Reset Successful ✅")
+closeForgot()
+}else{
+alert("Error ❌")
+}
+
+})
+}
+
+function resetForgotModal(){
+
+// ✅ correct IDs use karo
+document.getElementById("fpUsername").value = ""
+document.getElementById("fpOtp").value = ""
+document.getElementById("fpNewPass").value = ""
+
+// reset steps
+document.getElementById("step1").style.display = "block"
+document.getElementById("step2").style.display = "none"
+document.getElementById("step3").style.display = "none"
+
+// reset user
+fpUser = ""
+
 }
 </script>
 
