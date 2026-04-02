@@ -789,3 +789,40 @@ select.absent{
     border-color:#dc2626;
     color:#dc2626;
 }
+
+/* 🔥 LOGO CARD */
+.logo-card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fff;
+    padding: 6px 12px;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    text-decoration: none;
+}
+
+/* 🔥 LOGO IMAGE */
+.logo-card img{
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* 🚀 HOVER EFFECT */
+.logo-card:hover{
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* 🖱 CLICK EFFECT */
+.logo-card:active{
+    transform: scale(0.95);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
