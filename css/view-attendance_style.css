@@ -70,7 +70,7 @@ border:2px solid white;
 /* ================= PAGE ================= */
 
 .container{
-padding:30px 40px;
+padding:40px;
 max-width:1400px;
 margin:auto;
 }
@@ -339,7 +339,7 @@ grid-template-columns:1fr;
 }
 
 .container{
-padding:20px;
+padding:40px;
 }
 
 }

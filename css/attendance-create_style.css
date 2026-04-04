@@ -128,7 +128,7 @@ transform:translateY(0);
 /* LAYOUT */
 
 .container{
-padding:20px 40px 40px 40px;
+padding:40px;
 max-width:1500px;
 margin:auto;
 }
@@ -387,7 +387,7 @@ margin:25px;
 }
 
 .container{
-padding:0 20px 30px 20px;
+padding:40px;
 }
 
 }

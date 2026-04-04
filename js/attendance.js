@@ -32,9 +32,39 @@ loadBatchAttendance()
 
 function openAddStudents(){
 
-document.getElementById("studentPopup").style.display="block"
-loadAllStudents()
+let popup = document.getElementById("studentPopup")
+let overlay = document.getElementById("overlay")
 
+popup.style.display = "block"
+overlay.style.display = "block"
+
+// 🔥 FIX: hide class remove karo
+popup.classList.remove("hide")
+
+setTimeout(()=>{
+    popup.classList.add("show")
+    overlay.classList.add("show")
+},10)
+
+loadAllStudents()
+}
+
+function closeStudentPopup(){
+
+let popup = document.getElementById("studentPopup")
+let overlay = document.getElementById("overlay")
+
+popup.classList.remove("show")
+overlay.classList.remove("show")
+
+setTimeout(()=>{
+    popup.style.display = "none"
+    overlay.style.display = "none"
+
+    // 🔥 OPTIONAL: clean reset
+    popup.classList.remove("hide")
+
+},300)
 }
 
 /* LOAD ALL STUDENTS */
@@ -122,6 +152,7 @@ fetch(API+"?action=getBatchStudents&batchId="+batchId)
     /* ❌ IF NO NEW STUDENT */
     if(newStudents.length === 0){
         alert("Students already added / No changes detected")
+        closeStudentPopup()   // 🔥 ADD THIS
         return
     }
 
@@ -139,9 +170,11 @@ fetch(API+"?action=getBatchStudents&batchId="+batchId)
 
         alert("Students Added to Batch")
 
-        loadAllStudents()        // reload list
-        updateStudentCount()     // update selected count
-        updateBatchCount()       // update batch count
+        loadAllStudents()
+        updateStudentCount()
+        updateBatchCount()
+
+        closeStudentPopup()   // 🔥 ADD THIS
 
     })
 
@@ -450,9 +483,17 @@ table.innerHTML+=`
 <td>${a.time}</td>
 <td>${a.topic}</td>
 <td>
-<button onclick="viewAttendance('${a.sessionId}','${a.date}','${a.time}','${a.topic}','${batchId}')"><b>View</b></button>
-<button class="edit-btn" onclick="editSession('${a.sessionId}')"><b>Edit</b></button>
-<button class="delete-btn" onclick="deleteSession('${a.sessionId}')"><b>Delete</b></button>
+<button onclick="viewAttendance('${a.sessionId}','${a.date}','${a.time}','${a.topic}','${batchId}')" class="view-btn">
+    <img src="view.png" alt="view">
+</button>
+
+<button onclick="editSession('${a.sessionId}')" class="view-btn edit-btn-hover">
+    <img src="pencil.png" alt="edit">
+</button>
+
+<button onclick="deleteSession('${a.sessionId}')" class="view-btn delete-btn-hover">
+    <img src="bin.png" alt="Delete">
+</button>
 </td>
 </td>
 </tr>
@@ -512,8 +553,13 @@ function editSession(sessionId){
     </td>
 
     <td>
-    <button class="edit-btn" id="save-${sessionId}" onclick="saveSession('${sessionId}')" disabled><b>Save</b></button>
-    <button class="delete-btn" onclick="cancelSession('${sessionId}')"><b>Cancel</b></button>
+    <button id="save-${sessionId}" onclick="saveSession('${sessionId}')" class="view-btn edit-btn-hover" disabled>
+        <img src="save.png" alt="edit">
+    </button>
+
+    <button onclick="cancelSession('${sessionId}')" class="view-btn delete-btn-hover">
+        <img src="cancel.png" alt="edit">
+    </button>
     </td>
     `
 
@@ -527,29 +573,43 @@ function loadSessionStudents(sessionId, row){
     .then(res=>res.json())
     .then(data=>{
 
-        let html = `<tr class="edit-dropdown"><td colspan="4">`
+        let html = `<tr class="edit-dropdown">
+        <td colspan="4">
+
+        <div class="students-container">
+        `
 
         data.forEach(s=>{
 
             html += `
-            <div style="margin:5px 0">
-            ${s.student}
+            <div class="student-row">
 
-            <select 
-                class="status-select"
-                data-original="${s.status}"
-                id="status-${sessionId}-${s.student}">
+                <div class="student-name">
+                    ${s.student}
+                </div>
 
-            <option class="present" ${s.status==="Present"?"selected":""}>Present</option>
-            <option class="absent" ${s.status==="Absent"?"selected":""}>Absent</option>
+                <div class="student-status">
+                    <select 
+                        class="status-select"
+                        data-original="${s.status}"
+                        id="status-${sessionId}-${s.student}">
 
-            </select>
+                        <option class="present" ${s.status==="Present"?"selected":""}>Present</option>
+                        <option class="absent" ${s.status==="Absent"?"selected":""}>Absent</option>
+
+                    </select>
+                </div>
 
             </div>
             `
         })
 
-        html += `</td></tr>`
+        html += `
+        </div>
+
+        </td>
+        </tr>
+        `
 
         row.insertAdjacentHTML("afterend", html)
 
@@ -648,8 +708,15 @@ function cancelSession(sessionId){
     <td>${time}</td>
     <td>${topic}</td>
     <td>
-    <button onclick="viewAttendance('${sessionId}')"><b>View</b></button>
-    <button onclick="editSession('${sessionId}')"><b>Edit</b></button>
+    <button onclick="viewAttendance('${sessionId}')" class="view-btn"><img src="view.png" alt="view"></button>
+    
+    <button onclick="editSession('${sessionId}')" class="view-btn edit-btn-hover">
+        <img src="pencil.png" alt="edit">
+    </button>
+
+    <button onclick="deleteSession('${sessionId}')" class="view-btn delete-btn-hover">
+        <img src="bin.png" alt="Delete">
+    </button>
     </td>
     `
 

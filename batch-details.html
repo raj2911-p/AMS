@@ -55,32 +55,6 @@ Create Attendance
 Add Students
 </button>
 
-
-<!-- ADD STUDENTS POPUP -->
-
-<div id="studentPopup" style="display:none">
-
-<h3>
-Select Students (<span id="studentCount">0</span>)
-</h3>
-
-<input type="text" id="studentSearch" placeholder="Search student...">
-
-<div class="select-all">
-<input type="checkbox" id="selectAll">
-<label for="selectAll">Select All Students</label>
-</div>
-
-<div id="studentList"></div>
-
-<div class="save-container">
-<button class="create-btn" onclick="saveBatchStudents()">
-Save Students
-</button>
-</div>
-
-</div>
-
 </div>
 
 
@@ -112,10 +86,37 @@ Save Students
 
 </div>
 
-
 </div>
 
 </div>
+
+<!-- ADD STUDENTS POPUP -->
+
+<div id="overlay"></div>
+
+<div id="studentPopup" style="display:none">
+
+<h3>
+Select Students (<span id="studentCount">0</span>)
+</h3>
+
+<input type="text" id="studentSearch" placeholder="Search student...">
+
+<div class="select-all">
+<input type="checkbox" id="selectAll">
+<label for="selectAll">Select All Students</label>
+</div>
+
+<div id="studentList" class="students-container"></div>
+
+<div class="save-container">
+<button id="update" class="create-btn" onclick="saveBatchStudents()">
+Save Students
+</button>
+</div>
+
+</div>
+
 
 
 <script src="js/config.js"></script>

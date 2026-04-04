@@ -482,6 +482,55 @@ margin-bottom:15px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
+/*==== Action Button ====*/
+td:last-child{
+    display: flex;
+    align-items: center;
+    gap: 8px;   /* space between icons */
+}
+
+.view-btn{
+    background: #1e3a8a; /* blue */
+    border: none;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+/* 🖼 ICON SIZE */
+.view-btn img{
+    width: 20px;
+    height: 20px;
+    filter: invert(1); /* white icon */
+}
+
+/* 🚀 HOVER */
+.view-btn:hover{
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+/* 🖱 CLICK EFFECT */
+.view-btn:active{
+    transform: scale(0.9);
+}
+
+.edit-btn-hover:hover{
+    background: #068517;
+    transform: scale(1.1);
+}
+
+.delete-btn-hover:hover{
+    background: #ac0b0b;
+    transform: scale(1.1);
+}
+
 /* RESPONSIVE */
 
 @media(max-width:900px){

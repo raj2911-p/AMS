@@ -104,18 +104,17 @@ function loadBatch(){
 <td>${count}</td>
 
 <td>
-<button onclick="openBatch('${b[0]}')"><b>Open</b></button>
-
-<button class="edit-btn"
-onclick="enableBatchEdit('${b[0]}','${b[1]}','${b[2] || ""}')">
-<b>Edit</b>
+<button onclick="openBatch('${b[0]}')" class="view-btn">
+    <img src="open.png" alt="view">
 </button>
 
-<button class="delete-btn"
-onclick="deleteBatch('${b[0]}')">
-<b>Delete</b>
+<button onclick="enableBatchEdit('${b[0]}','${b[1]}','${b[2] || ""}')" class="view-btn edit-btn-hover">
+    <img src="pencil.png" alt="edit">
 </button>
 
+<button onclick="deleteBatch('${b[0]}')" class="view-btn delete-btn-hover">
+    <img src="bin.png" alt="Delete">
+</button>
 </td>
 
 </tr>
@@ -141,8 +140,12 @@ function enableBatchEdit(id,name,faculty){
 <td>-</td>
 
 <td>
-<button id="save-${id}" class="edit-btn" onclick="saveBatchEdit('${id}')" disabled><b>Save</b></button>
-<button onclick="cancelBatchEdit('${id}')" class="delete-btn"><b>Cancel</b></button>
+<button id="save-${id}" onclick="saveBatchEdit('${id}')" class="view-btn edit-btn-hover" disabled>
+    <img src="save.png" alt="edit">
+</button>
+<button onclick="cancelBatchEdit('${id}')" class="view-btn delete-btn-hover">
+    <img src="cancel.png" alt="edit">
+</button>
 </td>
 `
 
@@ -287,16 +290,16 @@ function cancelBatchEdit(id){
 <td>${count}</td>
 
 <td>
-<button onclick="openBatch('${id}')"><b>Open</b></button>
-
-<button class="edit-btn"
-onclick="enableBatchEdit('${id}','${name}','${faculty}')">
-<b>Edit</b>
+<button onclick="openBatch('${id}')" class="view-btn">
+    <img src="open.png" alt="view">
 </button>
 
-<button class="delete-btn"
-onclick="deleteBatch('${id}')">
-<b>Delete</b>
+<button onclick="enableBatchEdit('${id}','${name}','${faculty}')" class="view-btn edit-btn-hover">
+    <img src="pencil.png" alt="edit">
+</button>
+
+<button onclick="deleteBatch('${id}')" class="view-btn delete-btn-hover">
+    <img src="bin.png" alt="Delete">
 </button>
 </td>
 `

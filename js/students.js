@@ -146,14 +146,14 @@ table.innerHTML+=`
 
 <td>
 
-<button onclick="viewStudent('${s[0]}')"><b>Profile</b></button>
+<button onclick="viewStudent('${s[0]}')" class="view-btn"><img src="view.png" alt="view"></button>
 
-<button onclick="enableEdit('${s[0]}','${s[1]}','${s[2]}','${s[3]}','${s[4]}')" class="edit-btn">
-<b>Edit</b>
+<button onclick="enableEdit('${s[0]}','${s[1]}','${s[2]}','${s[3]}','${s[4]}')" class="view-btn edit-btn-hover">
+    <img src="pencil.png" alt="edit">
 </button>
 
-<button onclick="deleteStudent('${s[0]}')" class="delete-btn">
-<b>Delete</b>
+<button onclick="deleteStudent('${s[0]}')" class="view-btn delete-btn-hover">
+    <img src="bin.png" alt="Delete">
 </button>
 
 </td>
@@ -190,9 +190,13 @@ row.innerHTML = `
 
 <td>
 
-<button id="save-${id}" onclick="saveEdit('${id}')" class="edit-btn" disabled><b>Save</b></button>
+<button id="save-${id}" onclick="saveEdit('${id}')" class="view-btn edit-btn-hover" disabled>
+    <img src="save.png" alt="edit">
+</button>
 
-<button onclick="cancelStudentEdit('${id}')" class="delete-btn"><b>Cancel</b></button>
+<button onclick="cancelStudentEdit('${id}')" class="view-btn delete-btn-hover">
+    <img src="cancel.png" alt="edit">
+</button>
 
 </td>
 
@@ -556,12 +560,14 @@ function cancelStudentEdit(id){
     <td>${email}</td>
 
 <td>
-<button onclick="viewStudent('${id}')"><b>Profile</b></button>
+<button onclick="viewStudent('${id}')" class="view-btn"><img src="view.png" alt="view"></button>
 
-<button onclick="enableEdit('${id}','${name}','${dob}','${phone}','${email}')" class="edit-btn"><b>Edit</b></button>
+<button onclick="enableEdit('${id}','${name}','${dob}','${phone}','${email}')" class="view-btn edit-btn-hover">
+    <img src="pencil.png" alt="edit">
+</button>
 
-<button onclick="deleteStudent('${id}')" class="delete-btn">
-<b>Delete</b>
+<button onclick="deleteStudent('${id}')" class="view-btn delete-btn-hover">
+    <img src="bin.png" alt="Delete">
 </button>
 </td>
 `
