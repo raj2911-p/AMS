@@ -208,17 +208,22 @@ fetch(API + "?action=getStudents")
             let message = `✨*Happy Birthday ${name}!*✨\n🎉🎂🎁🎈🥳🎊\nOn Your Special Day May God Bless You with lots of\nHappiness 😊,\nJoy 😂,\nPeace ✌🏻,\nSuccess 🏆💯 and\n💪 Good Health 👍...\nWish you a great year ahead 👍🏻😊\n\nWarm Regards,\n*SITH*\n*(Suhradam Information Technology Hub).*`
             let whatsappLink = `https://api.whatsapp.com/send?phone=91${phone}&text=${encodeWhatsAppMessage(message)}`
 
-            html += `
-            <div class="birthday-item">
+           let todayKey = new Date().toISOString().slice(0,10)
+           let wished = localStorage.getItem("wished_"+s[0]) === todayKey
+
+           html += `
+           <div class="birthday-item ${wished ? "wished" : ""}">
                 <span>${name}</span>
                 <div class="wish-line">
-                    <b>Send Wishes 👉</b> 
-                    <a href="${whatsappLink}" target="_blank" class="whatsapp-btn">
+                    <b>${wished ? "✔ Wishes Sent" : "Send Wishes 👉"}</b> 
+                    <a href="${whatsappLink}" target="_blank" 
+                    onclick="markWished('${s[0]}', this)" 
+                    class="whatsapp-btn">
                         <img src="js/whatsapp.png" alt="whatsapp">
                     </a>
                 </div>
-            </div>
-            `
+           </div>
+           `
         }
 
     })
@@ -278,4 +283,19 @@ window.location = "profile.html"
 function logout(){
 localStorage.clear()
 window.location = "index.html"
+}
+
+function markWished(studentId, el){
+
+    let today = new Date().toISOString().slice(0,10)
+
+    // 🔥 SAVE STATUS
+    localStorage.setItem("wished_"+studentId, today)
+
+    // 🔥 UI UPDATE (INSTANT)
+    let parent = el.closest(".birthday-item")
+
+    parent.classList.add("wished")
+
+    parent.querySelector(".wish-line b").innerText = "✔ Wishes Sent"
 }

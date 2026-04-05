@@ -322,6 +322,16 @@ background:#f1f5f9;
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
+.birthday-item.wished{
+    background: #d1fae5;
+    border-left: 5px solid #10b981;
+    opacity: 0.8;
+}
+
+.birthday-item.wished b{
+    color: green;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:1000px){
