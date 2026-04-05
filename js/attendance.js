@@ -26,10 +26,13 @@ loadBatchAttendance()
 
 }
 
+if(document.getElementById("attendanceTable")){
+    loadBatchStudents()
 }
 
-/* OPEN ADD STUDENTS POPUP */
+}
 
+/*==== OPEN ADD STUDENTS POPUP ====*/
 function openAddStudents(){
 
 let popup = document.getElementById("studentPopup")
@@ -49,6 +52,26 @@ setTimeout(()=>{
 loadAllStudents()
 }
 
+/*==== OPEN REMOVE STUDENTS POPUP ====*/
+function openRemoveStudents(){
+
+let popup = document.getElementById("removePopup")
+let overlay = document.getElementById("overlay")
+
+popup.style.display = "block"
+overlay.style.display = "block"
+
+popup.classList.remove("hide")
+
+setTimeout(()=>{
+    popup.classList.add("show")
+    overlay.classList.add("show")
+},10)
+
+loadBatchStudentsForRemove()
+}
+
+/*==== CLOSE STUDENTS POPUP ====*/
 function closeStudentPopup(){
 
 let popup = document.getElementById("studentPopup")
@@ -67,7 +90,22 @@ setTimeout(()=>{
 },300)
 }
 
-/* LOAD ALL STUDENTS */
+/*==== CLOSE REMOVE POPUP ====*/
+function closeRemovePopup(){
+
+let popup = document.getElementById("removePopup")
+let overlay = document.getElementById("overlay")
+
+popup.classList.remove("show")
+overlay.classList.remove("show")
+
+setTimeout(()=>{
+    popup.style.display = "none"
+    overlay.style.display = "none"
+},300)
+}
+
+/*==== LOAD ALL STUDENTS ====*/
 
 function loadAllStudents(){
 
@@ -126,8 +164,42 @@ updateStudentCount()
 
 }
 
-/* SAVE STUDENTS TO BATCH */
+/*==== LOAD BATCH STUDENTS FOR REMOVE ====*/
+function loadBatchStudentsForRemove(){
 
+fetch(API+"?action=getBatchStudents&batchId="+batchId)
+.then(res=>res.json())
+.then(students=>{
+
+let list = document.getElementById("removeStudentList")
+list.innerHTML = ""
+
+students.forEach(s=>{
+
+if(!s[1]) return
+
+list.innerHTML += `
+<label class="student-item">
+
+<div class="student-checkbox">
+<input type="checkbox" value="${s[0]}">
+</div>
+
+<div class="student-text">
+${s[1]}
+</div>
+
+</label>
+`
+
+})
+
+updateRemoveCount()
+
+})
+}
+
+/*==== SAVE STUDENTS TO BATCH ====*/
 function saveBatchStudents(){
 
 let checkboxes = document.querySelectorAll("#studentList input:checked")
@@ -170,16 +242,132 @@ fetch(API+"?action=getBatchStudents&batchId="+batchId)
 
         alert("Students Added to Batch")
 
-        loadAllStudents()
-        updateStudentCount()
-        updateBatchCount()
+        closeStudentPopup()
 
-        closeStudentPopup()   // 🔥 ADD THIS
+        setTimeout(()=>{
+            loadBatchStudents()
+            loadAllStudents()
+            loadBatchStudentsForRemove()
+            updateStudentCount()
+            updateBatchCount()
+        },150)
 
     })
 
 })
 
+}
+
+/*==== SAVE STUDENTS TO BATCH ====*/
+function removeBatchStudents(){
+
+let selected = document.querySelectorAll("#removeStudentList input:checked")
+
+let ids = []
+
+selected.forEach(cb=>{
+    ids.push(cb.value)
+})
+
+if(ids.length === 0){
+    alert("Select students to remove")
+    return
+}
+
+/* API CALL */
+fetch(API,{
+    method:"POST",
+    body:JSON.stringify({
+        action:"removeBatchStudents",
+        batchId:batchId,
+        students:ids
+    }),
+    headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+    }
+})
+.then(res => res.text())
+.then(text => {
+
+    let res
+    try{
+        res = JSON.parse(text)
+    }catch(e){
+        console.error(text)
+        throw new Error("Invalid JSON")
+    }
+
+    alert("Students Removed Successfully")
+
+    // 🔥 FIRST CLOSE POPUP (IMPORTANT)
+    closeRemovePopup()
+
+    // 🔥 THEN DELAYED REFRESH (SMOOTH UI)
+    setTimeout(()=>{
+        loadBatchStudents()
+        loadAllStudents()
+        loadBatchStudentsForRemove()
+        updateBatchCount()
+    },150)
+
+})
+.catch(err=>{
+    console.error(err)
+    alert("Remove failed")
+})
+}
+
+let overlay = document.getElementById("overlay")
+
+if(overlay){
+    overlay.addEventListener("click", function(){
+        closeStudentPopup()
+        closeRemovePopup()
+    })
+}
+
+document.addEventListener("input",function(e){
+
+if(e.target.id==="removeSearch"){
+
+let value=e.target.value.toLowerCase()
+
+document.querySelectorAll("#removeStudentList .student-item").forEach(item=>{
+
+let name=item.innerText.toLowerCase()
+
+item.style.display=name.includes(value) ? "flex" : "none"
+
+})
+
+}
+
+})
+
+document.addEventListener("change",function(e){
+
+if(e.target.id==="removeSelectAll"){
+
+let checked = e.target.checked
+
+document.querySelectorAll("#removeStudentList input").forEach(cb=>{
+cb.checked = checked
+})
+
+updateRemoveCount()
+}
+
+if(e.target.matches("#removeStudentList input")){
+updateRemoveCount()
+}
+
+})
+
+function updateRemoveCount(){
+
+let count = document.querySelectorAll("#removeStudentList input:checked").length
+
+document.getElementById("removeStudentCount").innerText = count
 }
 
 /* CREATE ATTENDANCE */
@@ -826,15 +1014,15 @@ status:status
 fetch(API,{
 method:"POST",
 body:JSON.stringify({
-action:"addAttendanceSession",
-date:document.getElementById("attDate").value,
-time:
-document.getElementById("attStartTime").value +" - " +
-document.getElementById("attEndTime").value,
-topic:document.getElementById("attTopic").value,
-batchId:batchId,
-students:students
-})
+    action:"addAttendanceSession",
+    date:document.getElementById("attDate").value,
+    time:
+    document.getElementById("attStartTime").value +" - " +
+    document.getElementById("attEndTime").value,
+    topic:document.getElementById("attTopic").value,
+    batchId:batchId,
+    students:students
+    })
 })
 .then(()=>{
 alert("Attendance Session Saved")
