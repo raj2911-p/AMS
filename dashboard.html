@@ -34,9 +34,12 @@ Attendance Management System
 
 <div class="admin" id="adminBox">
 
-<img src="https://i.pravatar.cc/40">
+<div class="logo-card">
 
-<span id="adminName"></span>
+    <img src="https://i.pravatar.cc/40">
+    <span id="adminName" style="color: #1e3a8a; font-weight: 600;"></span>
+
+</div>
 
 <!-- DROPDOWN -->
 <div id="dropdown" class="dropdown">
@@ -102,6 +105,16 @@ Attendance Management System
 </div>
 
 </div>
+
+<div id="footer"></div>
+
+<script>
+fetch("footer.html")
+.then(res => res.text())
+.then(data => {
+  document.getElementById("footer").innerHTML = data
+})
+</script>
 
 <script src="js/config.js"></script>
 <script src="js/dashboard.js"></script>

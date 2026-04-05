@@ -178,6 +178,9 @@ fetch(API + "?action=getStudents")
 .then(res => res.json())
 .then(data => {
 
+    let role = localStorage.getItem("role")
+    let isAdmin = role === "Admin"
+
     let today = new Date()
 
     let todayDay = today.getDate()
@@ -193,6 +196,10 @@ fetch(API + "?action=getStudents")
         let name = s[1]
         let dob = s[2]
         let phone = s[3]
+        let wishedDate = s[5]   // column index
+        let todayStr = new Date().toISOString().slice(0,10)
+
+        let wished = wishedDate === todayStr
 
         if(!dob) return
 
@@ -208,22 +215,21 @@ fetch(API + "?action=getStudents")
             let message = `✨*Happy Birthday ${name}!*✨\n🎉🎂🎁🎈🥳🎊\nOn Your Special Day May God Bless You with lots of\nHappiness 😊,\nJoy 😂,\nPeace ✌🏻,\nSuccess 🏆💯 and\n💪 Good Health 👍...\nWish you a great year ahead 👍🏻😊\n\nWarm Regards,\n*SITH*\n*(Suhradam Information Technology Hub).*`
             let whatsappLink = `https://api.whatsapp.com/send?phone=91${phone}&text=${encodeWhatsAppMessage(message)}`
 
-           let todayKey = new Date().toISOString().slice(0,10)
-           let wished = localStorage.getItem("wished_"+s[0]) === todayKey
-
-           html += `
-           <div class="birthday-item ${wished ? "wished" : ""}">
-                <span>${name}</span>
-                <div class="wish-line">
-                    <b>${wished ? "✔ Wishes Sent" : "Send Wishes 👉"}</b> 
-                    <a href="${whatsappLink}" target="_blank" 
-                    onclick="markWished('${s[0]}', this)" 
-                    class="whatsapp-btn">
-                        <img src="js/whatsapp.png" alt="whatsapp">
-                    </a>
+             html += `
+                <div class="birthday-item ${wished ? "wished" : ""}">
+                    <span>${name}</span>
+                    <div class="wish-line">
+                        <b>${wished ? "✔ Wishes Sent" : "Send Wishes 👉"}</b> 
+                        <a 
+                        href="${(wished || !isAdmin) ? "#" : whatsappLink}" 
+                        target="_blank"
+                        onclick="handleWishClick('${s[0]}', this)"
+                        class="whatsapp-btn ${(wished || !isAdmin) ? "disabled-btn" : ""}">
+                            <img src="js/whatsapp.png" alt="whatsapp">
+                        </a>
+                    </div>
                 </div>
-           </div>
-           `
+                `
         }
 
     })
@@ -287,15 +293,70 @@ window.location = "index.html"
 
 function markWished(studentId, el){
 
-    let today = new Date().toISOString().slice(0,10)
+let today = new Date().toISOString().slice(0,10)
 
-    // 🔥 SAVE STATUS
-    localStorage.setItem("wished_"+studentId, today)
+// 🔥 BACKEND SAVE
+fetch(API,{
+    method:"POST",
+    body:JSON.stringify({
+        action:"markBirthdayWished",
+        studentId:studentId,
+        date:today
+    })
+})
+.then(res=>res.json())
+.then(()=>{
 
-    // 🔥 UI UPDATE (INSTANT)
+    // 🔥 UI UPDATE
     let parent = el.closest(".birthday-item")
+    parent.classList.add("wished")
+    parent.querySelector(".wish-line b").innerText = "✔ Wishes Sent"
+
+})
+}
+
+function handleWishClick(studentId, el){
+
+let role = localStorage.getItem("role")
+
+// ❌ NOT ADMIN
+if(role !== "Admin"){
+    alert("Only Admin can send wishes ❌")
+    return false
+}
+
+let parent = el.closest(".birthday-item")
+
+// ❌ already wished
+if(parent.classList.contains("wished")){
+    return false
+}
+
+// ✅ WhatsApp OPEN hone do (IMPORTANT)
+// 👉 koi preventDefault nahi
+
+// 🔥 thoda delay ke baad UI update
+setTimeout(()=>{
 
     parent.classList.add("wished")
-
     parent.querySelector(".wish-line b").innerText = "✔ Wishes Sent"
+
+    el.classList.add("disabled-btn")
+    el.style.pointerEvents = "none"
+    el.removeAttribute("href")
+
+},500)
+
+// ✅ backend save
+let today = new Date().toISOString().slice(0,10)
+
+fetch(API,{
+    method:"POST",
+    body:JSON.stringify({
+        action:"markBirthdayWished",
+        studentId:studentId,
+        date:today
+    })
+})
+
 }

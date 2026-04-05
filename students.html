@@ -23,6 +23,10 @@
     <img src="logo.png" alt="Logo">
 </a>
 
+<div class="title">
+Attendance Management System
+</div>
+
 <div class="nav-links">
 
 <a href="dashboard.html">Dashboard</a>
@@ -103,6 +107,16 @@ Create Student
 </div>
 
 </div>
+
+<div id="footer"></div>
+
+<script>
+fetch("footer.html")
+.then(res => res.text())
+.then(data => {
+  document.getElementById("footer").innerHTML = data
+})
+</script>
 
 <script src="js/config.js"></script>
 <script src="js/students.js"></script>

@@ -29,9 +29,16 @@ font-weight:700;
 font-size:22px;
 }
 
+.title{
+font-size:20px;
+font-weight:600;
+opacity:0.9;
+align-items: center;
+}
+
 .nav-links{
 display:flex;
-gap:25px;
+gap:40px;
 }
 
 .nav-links a{

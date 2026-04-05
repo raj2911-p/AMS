@@ -19,6 +19,10 @@
     <img src="logo.png" alt="Logo">
 </a>
 
+<div class="title">
+Attendance Management System
+</div>
+
 <div class="nav-links">
 <a href="dashboard.html">Dashboard</a>
 <a href="students.html">Students</a>
@@ -145,6 +149,16 @@ Remove Students
 </div>
 
 </div>
+
+<div id="footer"></div>
+
+<script>
+fetch("footer.html")
+.then(res => res.text())
+.then(data => {
+  document.getElementById("footer").innerHTML = data
+})
+</script>
 
 <script src="js/config.js"></script>
 <script src="js/attendance.js"></script>
