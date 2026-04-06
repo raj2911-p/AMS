@@ -205,7 +205,7 @@ transform:translateY(-1px);
 .img1{
     width: auto;
     height: 50px;
-    filter: invert(18%) sepia(90%) saturate(700%) hue-rotate(5deg) brightness(75%) contrast(110%);
+    /*filter: invert(18%) sepia(90%) saturate(700%) hue-rotate(5deg) brightness(75%) contrast(110%);*/
 }
 
 .birthday-item{
