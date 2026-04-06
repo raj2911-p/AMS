@@ -197,6 +197,17 @@ transform:translateY(-1px);
     box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
+.birthday-box h2{
+    color: #1e3a8a;
+    margin-bottom: 6.5px;
+}
+
+.birthday-box img{
+    width: auto;
+    height: 50px;
+    filter: invert(83%) sepia(88%) saturate(747%) hue-rotate(1deg) brightness(103%) contrast(101%);
+}
+
 .birthday-item{
     display:flex;
     justify-content:space-between;

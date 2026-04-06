@@ -235,7 +235,7 @@ fetch(API + "?action=getStudents")
     })
 
     if(!found){
-        html = "<p>No birthdays today 🎉</p>"
+        html = "<p>No Students Have Birthdays Today...!</p>"
     }
 
     container.innerHTML = html
