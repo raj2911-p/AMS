@@ -202,7 +202,7 @@ transform:translateY(-1px);
     margin-bottom: 6.5px;
 }
 
-.birthday-box img{
+.img1{
     width: auto;
     height: 50px;
     filter: invert(18%) sepia(90%) saturate(700%) hue-rotate(5deg) brightness(75%) contrast(110%);
