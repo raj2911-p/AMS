@@ -54,8 +54,26 @@ document.getElementById("role").value = data.role || ""
 document.getElementById("courses").value = data.courses || ""
 
 /* ✅ ADD THIS (VERY IMPORTANT) */
-document.getElementById("profilePreview").src =
-data.photo || "https://i.pravatar.cc/120"
+let img = document.getElementById("profilePreview")
+let loader = document.getElementById("imgLoader")
+
+if(data.photo){
+    img.src = data.photo
+
+    img.onload = function(){
+        loader.style.display = "none"
+        img.style.display = "block"
+    }
+}else{
+    // 🔥 NO IMAGE → SHOW NOTHING
+    loader.style.display = "none"
+    img.style.display = "none"
+}
+
+img.onload = function(){
+    loader.style.display = "none"
+    img.style.display = "block"
+}
 
 photoBase64 = data.photo || ""
 
@@ -420,6 +438,10 @@ if(!confirm("Remove profile photo?")) return;
 photoBase64 = ""   // 🔥 important
 
 let img = document.getElementById("profilePreview")
+let loader = document.getElementById("imgLoader")
+
+loader.style.display = "flex"
+img.style.display = "none"
 img.src = "https://i.pravatar.cc/120"
 
 /* 🔥 FORCE CHANGE DETECT */

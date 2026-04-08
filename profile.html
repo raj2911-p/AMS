@@ -18,7 +18,15 @@
 <div class="profile-container">
 
 <div class="photo-section">
-    <img id="profilePreview" src="https://i.pravatar.cc/120" class="profile-img">
+    <div class="img-wrapper">
+        <div class="loader" id="imgLoader">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <img id="profilePreview" class="profile-img" style="display:none;">
+    </div>
 
     <input type="file" id="photoInput" accept="image/*" hidden>
 

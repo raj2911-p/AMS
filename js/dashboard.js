@@ -367,20 +367,31 @@ fetch(API,{
 function loadProfileImage(){
 
 let user = localStorage.getItem("user")
-let img = localStorage.getItem("profilePhoto")
 
-if(img){
-    document.getElementById("navProfileImg").src = img
-}
+let img = document.getElementById("navProfileImg")
+let loader = document.getElementById("navLoader")
+
+// 🔥 SHOW LOADER FIRST
+loader.style.display = "flex"
+img.style.display = "none"
 
 fetch(API+"?action=getProfile&username="+encodeURIComponent(user))
 .then(res=>res.json())
 .then(data=>{
 
-let img = data.photo || localStorage.getItem("profilePhoto")
+if(data.photo){
 
-document.getElementById("navProfileImg").src =
-img || "https://i.pravatar.cc/40"
+    img.src = data.photo
+
+    img.onload = function(){
+        loader.style.display = "none"
+        img.style.display = "block"
+    }
+
+}else{
+    loader.style.display = "none"
+    img.style.display = "none"
+}
 
 })
 }
