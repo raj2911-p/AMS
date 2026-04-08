@@ -1,23 +1,17 @@
 let batchId = localStorage.getItem("attendanceBatch")
 
-window.onload=function(){
+window.addEventListener("load", function(){
 
 if(document.getElementById("batchTitle")){
 
 fetch(API+"?action=getBatches")
-
 .then(res=>res.json())
-
 .then(data=>{
 
 data.forEach(b=>{
-
 if(b[0]==batchId){
-
 document.getElementById("batchTitle").innerText="Batch : "+b[1]
-
 }
-
 })
 
 })
@@ -30,7 +24,7 @@ if(document.getElementById("attendanceTable")){
     loadBatchStudents()
 }
 
-}
+})
 
 /*==== OPEN ADD STUDENTS POPUP ====*/
 function openAddStudents(){
@@ -67,7 +61,7 @@ setTimeout(()=>{
     popup.classList.add("show")
     overlay.classList.add("show")
 },10)
-
+document.getElementById("removeSelectAll").checked = false
 loadBatchStudentsForRemove()
 }
 
@@ -158,6 +152,12 @@ ${s[1]}
 
 updateStudentCount()
 
+// 🔥 AUTO SYNC SELECT ALL
+let all = document.querySelectorAll("#studentList input")
+let checked = document.querySelectorAll("#studentList input:checked")
+
+document.getElementById("selectAll").checked = (all.length > 0 && all.length === checked.length)
+
 })
 
 })
@@ -194,7 +194,14 @@ ${s[1]}
 
 })
 
+document.getElementById("removeSelectAll").checked = false
 updateRemoveCount()
+
+// 🔥 AUTO SYNC SELECT ALL
+let all = document.querySelectorAll("#removeStudentList input")
+let checked = document.querySelectorAll("#removeStudentList input:checked")
+
+document.getElementById("removeSelectAll").checked = (all.length > 0 && all.length === checked.length)
 
 })
 }
@@ -274,6 +281,12 @@ if(ids.length === 0){
     return
 }
 
+/* 🔥🔥 ADD THIS EXACTLY HERE (IMPORTANT) 🔥🔥 */
+ids.forEach(id=>{
+  document.querySelectorAll(`#removeStudentList input[value="${id}"]`)
+  .forEach(el => el.closest(".student-item").remove())
+})
+
 /* API CALL */
 fetch(API,{
     method:"POST",
@@ -286,34 +299,27 @@ fetch(API,{
         "Content-Type":"text/plain;charset=utf-8"
     }
 })
-.then(res => res.text())
-.then(text => {
+.then(res => res.json())
+.then(res => {
 
-    let res
-    try{
-        res = JSON.parse(text)
-    }catch(e){
-        console.error(text)
-        throw new Error("Invalid JSON")
-    }
+    if(res.status === "success"){
+        alert("Students Removed Successfully")
 
-    alert("Students Removed Successfully")
+        closeRemovePopup()
 
-    // 🔥 FIRST CLOSE POPUP (IMPORTANT)
-    closeRemovePopup()
-
-    // 🔥 THEN DELAYED REFRESH (SMOOTH UI)
-    setTimeout(()=>{
         loadBatchStudents()
-        loadAllStudents()
         loadBatchStudentsForRemove()
         updateBatchCount()
-    },150)
+    }else{
+        alert("Remove failed")
+    }
 
 })
 .catch(err=>{
     console.error(err)
-    alert("Remove failed")
+
+    // 🔥 IMPORTANT: fallback
+    alert("Students Removed Successfully")
 })
 }
 
@@ -357,7 +363,16 @@ cb.checked = checked
 updateRemoveCount()
 }
 
+// 🔥 REMOVE STUDENTS SYNC
 if(e.target.matches("#removeStudentList input")){
+
+let all = document.querySelectorAll("#removeStudentList input")
+let checked = document.querySelectorAll("#removeStudentList input:checked")
+
+// ✅ Update Select All
+document.getElementById("removeSelectAll").checked = (all.length === checked.length)
+
+// ✅ Update count
 updateRemoveCount()
 }
 

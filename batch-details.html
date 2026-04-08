@@ -165,7 +165,7 @@ fetch("footer.html")
 
 
 <script>
-window.onload=function(){
+window.addEventListener("load", function(){
 
 const batchId = localStorage.getItem("attendanceBatch");
 
@@ -187,8 +187,10 @@ fetch(API + "?action=getBatches")
   }
 
 });
+
 loadBatchAttendance()
-}
+
+})
 </script>
 
 

@@ -2,6 +2,8 @@ let originalData = {}
 
 let createMode = localStorage.getItem("createMode") === "true"
 
+let photoBase64 = ""
+
 window.onload = function(){
 loadProfile()
 }
@@ -51,8 +53,19 @@ document.getElementById("password").value = data.password || ""
 document.getElementById("role").value = data.role || ""
 document.getElementById("courses").value = data.courses || ""
 
+/* ✅ ADD THIS (VERY IMPORTANT) */
+document.getElementById("profilePreview").src =
+data.photo || "https://i.pravatar.cc/120"
+
+photoBase64 = data.photo || ""
+
 /* 🔒 PASSWORD ALWAYS LOCK */
 document.getElementById("password").disabled = true
+
+/* 🔥 ALWAYS DISABLE UPDATE BUTTON AFTER LOAD */
+let btn = document.getElementById("updateBtn")
+btn.disabled = true
+btn.classList.remove("active")
 
 })
 
@@ -70,6 +83,11 @@ document.getElementById("username").disabled = false
 document.getElementById("password").disabled = true
 
 document.getElementById("editBtn").innerText="Editing..."
+
+/* 🔥 RESET UPDATE BUTTON */
+let btn = document.getElementById("updateBtn")
+btn.disabled = true
+btn.classList.remove("active")
 
 document.querySelectorAll("input").forEach(input=>{
 input.oninput = checkChanges
@@ -90,7 +108,8 @@ document.getElementById("email").value !== originalData.email ||
 document.getElementById("username").value !== originalData.username ||
 document.getElementById("password").value !== originalData.password ||
 document.getElementById("role").value !== originalData.role ||
-document.getElementById("courses").value !== originalData.courses
+document.getElementById("courses").value !== originalData.courses ||
+(photoBase64 !== originalData.photo)
 ){
 changed = true
 }
@@ -120,7 +139,8 @@ email: document.getElementById("email").value.trim(),
 username: document.getElementById("username").value.trim(),
 password: document.getElementById("password").value.trim(),
 role: capitalizeWords(document.getElementById("role").value.trim()),
-courses: capitalizeWords(document.getElementById("courses").value.trim())
+courses: capitalizeWords(document.getElementById("courses").value.trim()),
+photo: photoBase64   // ✅ ONLY THIS
 }
 
 /* VALIDATION */
@@ -132,6 +152,8 @@ body:JSON.stringify(data)
 })
 .then(res=>res.json())
 .then(res=>{
+
+console.log("Data sent successfully") 
 
 if(res.status=="exists"){
 alert("Username already exists ❌")
@@ -145,10 +167,47 @@ document.getElementById("password").disabled = true
 localStorage.removeItem("createMode")
 window.location="dashboard.html"
 }else{
+
+localStorage.setItem("profilePhoto", photoBase64 || "")
+
+document.getElementById("profilePreview").classList.remove("changed")
+
+/* ✅ MESSAGE */
 document.getElementById("msg").innerText="✅ Profile Updated"
-loadProfile()
+
+/* 🔥 RESET EDIT BUTTON */
+document.getElementById("editBtn").innerText = "Edit"
+
+/* 🔒 DISABLE INPUTS AGAIN */
+document.querySelectorAll("input").forEach(i=>i.disabled = true)
+
+/* 🔥 REMOVE INPUT EVENTS */
+document.querySelectorAll("input").forEach(input=>{
+input.oninput = null
+})
+
+/* 🔥 UPDATE ORIGINAL DATA MANUALLY */
+originalData = {
+name: data.name,
+mobile: data.mobile,
+email: data.email,
+username: data.username,
+password: data.password,
+role: data.role,
+courses: data.courses,
+photo: data.photo
 }
 
+/* 🔥 DISABLE UPDATE BUTTON */
+let btn = document.getElementById("updateBtn")
+btn.disabled = true
+btn.classList.remove("active")
+
+}
+
+})
+.catch(()=>{
+alert("Something went wrong ❌")
 })
 }
 
@@ -323,4 +382,50 @@ return false
 }
 
 return valid
+}
+
+document.getElementById("photoInput").addEventListener("change", function(){
+
+let file = this.files[0]
+
+if(!file) return
+
+/* ✅ SIZE LIMIT (OPTIONAL BUT BEST) */
+if(file.size > 100000){
+alert("Image size should be less than 2MB ❌")
+return
+}
+
+let reader = new FileReader()
+
+reader.onload = function(e){
+    photoBase64 = e.target.result
+
+    let img = document.getElementById("profilePreview")
+
+    img.src = photoBase64
+
+    img.classList.add("changed")   // ✅ YAHI ADD KARNA HAI
+
+    checkChanges() // already bataya tha
+}
+
+reader.readAsDataURL(file)
+})
+
+function removePhoto(){
+
+if(!confirm("Remove profile photo?")) return;
+
+photoBase64 = ""   // 🔥 important
+
+let img = document.getElementById("profilePreview")
+img.src = "https://i.pravatar.cc/120"
+
+/* 🔥 FORCE CHANGE DETECT */
+img.classList.add("changed")
+
+/* 🔥 DIRECT SAVE TO BACKEND */
+updateProfile()
+
 }

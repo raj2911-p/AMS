@@ -13,11 +13,22 @@
 
 <body>
 
-<div class="profile-container">
-
 <h2>👤 My Profile</h2>
 
-<div class="profile-card">
+<div class="profile-container">
+
+<div class="photo-section">
+    <img id="profilePreview" src="https://i.pravatar.cc/120" class="profile-img">
+
+    <input type="file" id="photoInput" accept="image/*" hidden>
+
+    <div class="photo-btns">
+        <button class="upload" onclick="document.getElementById('photoInput').click()"><img src="upload.png"></button>
+        <button class="remove" onclick="removePhoto()"><img src="remove.png"></button>
+    </div>
+</div>
+
+<div class="profile-card" style="align-items: center; align-content: center;">
 
 <div class="form-group">
 <label>Faculty Name</label>

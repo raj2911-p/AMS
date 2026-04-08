@@ -1,11 +1,14 @@
-window.onload = function () {
+window.addEventListener("load", function () {
 
 loadTodayBirthdays()
 loadCounts()
 updateTime()
 setInterval(updateTime,1000)
 
-}
+// 🔥 ADD THIS
+loadProfileImage()
+
+})
 
 /* ================= LOAD COUNTS ================= */
 
@@ -359,4 +362,25 @@ fetch(API,{
     })
 })
 
+}
+
+function loadProfileImage(){
+
+let user = localStorage.getItem("user")
+let img = localStorage.getItem("profilePhoto")
+
+if(img){
+    document.getElementById("navProfileImg").src = img
+}
+
+fetch(API+"?action=getProfile&username="+encodeURIComponent(user))
+.then(res=>res.json())
+.then(data=>{
+
+let img = data.photo || localStorage.getItem("profilePhoto")
+
+document.getElementById("navProfileImg").src =
+img || "https://i.pravatar.cc/40"
+
+})
 }
