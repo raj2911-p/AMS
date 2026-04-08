@@ -492,3 +492,21 @@ function exportBatchPDF(){
         },300)
     }
 }
+
+document.addEventListener("input", function(e){
+
+if(e.target.id === "batchSearch"){
+
+let value = e.target.value.toLowerCase()
+
+document.querySelectorAll("#batchTable tr").forEach(row=>{
+
+let text = row.innerText.toLowerCase()
+
+row.style.display = text.includes(value) ? "" : "none"
+
+})
+
+}
+
+})

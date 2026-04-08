@@ -410,7 +410,7 @@ cursor:pointer;
 
 font-size:14px;
 
-margin-bottom:15px;
+margin-bottom:0px;
 
 transition:0.3s;
 
@@ -436,14 +436,14 @@ display:flex;
 
 justify-content:flex-end;  /* shifts button to right */
 
-margin-bottom:15px;
+margin-bottom:0px;
 
 }
 
 .export-right{
 display:block;
 margin-left:auto;
-margin-bottom:15px;
+margin-bottom:0px;
 }
 
 /* 🔥 LOGO CARD */
@@ -548,4 +548,54 @@ margin:25px;
 padding:0 20px 30px 20px;
 }
 
+}
+
+/* 🔥 TOP BAR (TITLE + RIGHT SIDE CONTROLS) */
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* 🔥 RIGHT SIDE (INPUT + BUTTON) */
+.actions{
+    display: flex;
+    align-items: center;
+    gap: 12px;   /* 👈 GAP BETWEEN SEARCH & BUTTON */
+    margin-bottom: 15px;
+}
+
+/* 🔍 SEARCH INPUT */
+.actions input{
+    height: 36px;
+    width: 220px;
+    padding: 0 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+/* 🔥 FOCUS EFFECT */
+.actions input:focus{
+    border-color: #2563eb;
+    box-shadow: 0 0 5px rgba(37,99,235,0.3);
+}
+
+/* 🔘 EXPORT BUTTON FIX */
+.export-btn{
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.export-btn:hover{
+    background: #1e40af;
 }

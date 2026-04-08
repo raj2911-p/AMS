@@ -1256,3 +1256,21 @@ setTimeout(()=>{
 }
 
 }
+
+document.addEventListener("input", function(e){
+
+if(e.target.id === "historySearch"){
+
+let value = e.target.value.toLowerCase()
+
+document.querySelectorAll("#historyTable tr").forEach(row=>{
+
+let text = row.innerText.toLowerCase()
+
+row.style.display = text.includes(value) ? "" : "none"
+
+})
+
+}
+
+})

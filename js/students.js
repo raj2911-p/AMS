@@ -585,3 +585,21 @@ function formatDOB(dob){
         year: "numeric"
     })
 }
+
+document.addEventListener("input", function(e){
+
+if(e.target.id === "studentSearchMain"){
+
+let value = e.target.value.toLowerCase()
+
+document.querySelectorAll("#studentTable tr").forEach(row=>{
+
+let text = row.innerText.toLowerCase()
+
+row.style.display = text.includes(value) ? "" : "none"
+
+})
+
+}
+
+})

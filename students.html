@@ -75,13 +75,22 @@ Create Student
 <!-- STUDENT TABLE -->
 <div class="student-table">
 
-<h2>Students List
-<div class="export-container">
-<button class="export-btn" onclick="exportStudentPDF()">
-<b>Export PDF</b>
-</button>
+<div class="table-header">
+
+  <h2>Students List</h2>
+
+  <div class="actions">
+    <input 
+      type="text" 
+      id="studentSearchMain" 
+      placeholder="Search students...">
+
+    <button class="export-btn" onclick="exportStudentPDF()">
+      <b>Export PDF</b>
+    </button>
+  </div>
+
 </div>
-</h2>
 
 <table>
 
