@@ -5,7 +5,6 @@ window.addEventListener("load", function(){
 if(document.getElementById("batchTitle")){
 
 fetchCached(API+"?action=getBatches")
-.then(res=>res.json())
 .then(data=>{
 
 data.forEach(b=>{
@@ -163,7 +162,7 @@ Promise.all([
 function loadBatchStudentsForRemove(){
 
 fetchCached(API+"?action=getBatchStudents&batchId="+batchId)
-.then(res=>res.json())
+
 .then(students=>{
 
 let list = document.getElementById("removeStudentList")
@@ -215,7 +214,7 @@ checkboxes.forEach(cb=>{
 /* ===== GET ALREADY ADDED STUDENTS ===== */
 
 fetchCached(API+"?action=getBatchStudents&batchId="+batchId)
-.then(res=>res.json())
+
 .then(existing=>{
 
     let existingIds = existing.map(s=>s[0])
@@ -495,7 +494,7 @@ if(!valid){
 ========================= */
 
 fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
-.then(res=>res.json())
+
 .then(data=>{
 
     let selectedDate = date.value
@@ -757,7 +756,6 @@ function editSession(sessionId){
 function loadSessionStudents(sessionId, row){
 
     fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
-    .then(res=>res.json())
     .then(data=>{
 
         let html = `<tr class="edit-dropdown">
@@ -834,7 +832,6 @@ function saveSession(sessionId){
 
     // ❌ DUPLICATE DATE CHECK
     fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
-    .then(res=>res.json())
     .then(data=>{
 
         let exists = data.some(s =>
@@ -849,7 +846,6 @@ function saveSession(sessionId){
 
         // 👉 COLLECT STUDENT DATA
         fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
-        .then(res=>res.json())
         .then(students=>{
 
             let updated = students.map(s=>({
@@ -1103,43 +1099,31 @@ if(!batchId){
     return
 }
 
-/* =========================
-   🔹 GET BATCH INFO
-========================= */
-
-let batchRes = await fetchCached(API+"?action=getBatches")
-let batchData = await batchRes.json()
+/* 🔹 GET BATCH INFO */
+let batchData = await fetchCached(API+"?action=getBatches")
 
 let batch = batchData.slice(1).find(b => b[0] == batchId)
 
 let batchName = batch ? batch[1] : ""
 let faculty = batch ? batch[2] : "Not Assigned"
 
-/* =========================
-   🔹 GET SESSIONS
-========================= */
-
-let sessionRes = await fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
-let sessions = await sessionRes.json()
+/* 🔹 GET SESSIONS */
+let sessions = await fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
 
 if(!sessions.length){
     alert("No attendance data found")
     return
 }
 
-// SORT DATE
+/* SORT */
 sessions.sort((a,b)=> new Date(a.date) - new Date(b.date))
 
 let content = ""
 
-/* =========================
-   🔹 LOOP EACH SESSION
-========================= */
-
+/* 🔹 LOOP */
 for(let s of sessions){
 
-    let res = await fetchCached(API+"?action=getSessionAttendance&sessionId="+s.sessionId)
-    let students = await res.json()
+    let students = await fetchCached(API+"?action=getSessionAttendance&sessionId="+s.sessionId)
 
     let formattedDate = new Date(s.date).toLocaleDateString("en-GB", {
         day:"2-digit",month:"short",year:"numeric"
@@ -1164,7 +1148,7 @@ for(let s of sessions){
         <table>
             <thead>
                 <tr>
-                    <th>Students Name</th>
+                    <th>Student Name</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -1173,26 +1157,20 @@ for(let s of sessions){
     </div>`
 }
 
-/* =========================
-   🔹 FINAL HTML
-========================= */
-
+/* 🔹 FINAL HTML */
 let html = `
 <html>
 <head>
 <title>Attendance Report</title>
-
 <style>
 body{font-family:Arial;padding:20px;}
-.header{text-align:center;margin-bottom:20px;}
 .logo{position:absolute;left:20px;top:20px;}
-.logo img{width:100%; height:60px;}
+.logo img{height:60px;}
 .session-block{margin-top:25px;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:2px solid #ccc;padding:8px;}
-th{background:#eee; text-align:left;}
+th,td{border:1px solid #ccc;padding:8px;}
+th{background:#eee;}
 </style>
-
 </head>
 
 <body>
@@ -1201,12 +1179,10 @@ th{background:#eee; text-align:left;}
 <img src="logo.png">
 </div>
 
-<div class="header">
 <h1 style="text-align:center;">Attendance Report</h1>
-</div>
 
-<h2 style="margin-top: 60px;">Batch Name: ${batchName}</h2>
-<h2 style="margin-bottom: 55px;">Faculty: ${faculty}</h2>
+<h2 style="margin-top:60px;">Batch Name: ${batchName}</h2>
+<h2>Faculty: ${faculty}</h2>
 
 ${content}
 
@@ -1214,31 +1190,22 @@ ${content}
 </html>
 `
 
-/* =========================
-   🔹 OPEN WINDOW
-========================= */
-
 let win = window.open("", "_blank")
 
 if(!win){
-    alert("Popup blocked! Allow popups.")
+    alert("Popup blocked!")
     return
 }
 
-win.document.open()
 win.document.write(html)
 win.document.close()
 
-// WAIT BEFORE PRINT
-setTimeout(()=>{
-    win.print()
-},300)
+setTimeout(()=>{ win.print() },300)
 
 }catch(err){
-    console.error(err)
-    alert("Export failed")
+console.error(err)
+alert("Export failed")
 }
-
 }
 
 document.addEventListener("input", function(e){

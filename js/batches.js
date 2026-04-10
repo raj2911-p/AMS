@@ -38,7 +38,6 @@ function createBatch(){
     }
 
     fetchCached(API+"?action=getBatches")
-    .then(res=>res.json())
     .then(data=>{
 
         let exists = false
@@ -81,11 +80,9 @@ function createBatch(){
 function loadBatch(){
 
     fetchCached(API+"?action=getBatches")
-    .then(res=>res.json())
     .then(data=>{
 
         fetchCached(API+"?action=getBatchStudentCount")
-        .then(res=>res.json())
         .then(counts=>{
 
             let table=document.getElementById("batchTable")
@@ -202,7 +199,6 @@ function saveBatchEdit(id){
 
     // 👉 STEP 3: duplicate check
     fetchCached(API+"?action=getBatches")
-    .then(res=>res.json())
     .then(data=>{
 
         let exists = false

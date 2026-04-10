@@ -81,8 +81,6 @@ batchNames.push(b[1])
 
 fetchCached(API+"?action=getBatchStudentCount")
 
-.then(res=>res.json())
-
 .then(counts=>{
 
 batchNames.forEach((name,i)=>{
@@ -167,7 +165,6 @@ now.toLocaleDateString()+" | "+now.toLocaleTimeString()
 function loadTodayBirthdays(){
 
 fetchCached(API + "?action=getStudents")
-.then(res => res.json())
 .then(data => {
 
     let role = localStorage.getItem("role")
@@ -365,7 +362,6 @@ loader.style.display = "flex"
 img.style.display = "none"
 
 fetchCached(API+"?action=getProfile&username="+encodeURIComponent(user))
-.then(res=>res.json())
 .then(data=>{
 
 if(data.photo){

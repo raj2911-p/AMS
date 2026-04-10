@@ -71,8 +71,7 @@ return
 
 /* ===== CHECK DUPLICATE ===== */
 
-fetch(API + "?action=getStudents")
-.then(res => res.json())
+fetchCached(API + "?action=getStudents")
 .then(data => {
 
 let exists = false
@@ -126,8 +125,7 @@ alert("Error while checking data")
 
 function loadStudents(){
 
-fetch(API+"?action=getStudents")
-.then(res=>res.json())
+fetchCached(API+"?action=getStudents")
 .then(data=>{
 
 let table=document.getElementById("studentTable")
@@ -384,8 +382,7 @@ return
 
 /*==== CHECK DUPLICATE ====*/
 
-fetch(API + "?action=getStudents")
-.then(res => res.json())
+fetchCached(API + "?action=getStudents")
 .then(data => {
 
 let exists = false

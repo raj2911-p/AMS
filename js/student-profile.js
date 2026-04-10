@@ -12,8 +12,8 @@ loadStudentAttendance()
 function loadStudentAttendance(){
 
 Promise.all([
-fetchCached(API+"?action=getStudents").then(res=>res.json()),
-fetchCached(API+"?action=getBatches").then(res=>res.json())
+fetchCached(API+"?action=getStudents"),
+fetchCached(API+"?action=getBatches")
 ])
 
 .then(([students,batches])=>{
@@ -60,13 +60,11 @@ batches.slice(1).forEach(batch=>{
 promises.push(
 
 fetchCached(API+"?action=getAttendanceSessions&batchId="+batch[0])
-.then(res=>res.json())
 .then(sessions=>{
 
 let sessionPromises = sessions.map(session=>{
 
 return fetchCached(API+"?action=getSessionAttendance&sessionId="+session.sessionId)
-.then(res=>res.json())
 .then(attendance=>{
 
 attendance.forEach(a=>{
@@ -138,13 +136,11 @@ batches.slice(1).forEach(batch=>{
 promises.push(
 
 fetchCached(API+"?action=getAttendanceSessions&batchId="+batch[0])
-.then(res=>res.json())
 .then(sessions=>{
 
 let sessionPromises = sessions.map(session=>{
 
 return fetchCached(API+"?action=getSessionAttendance&sessionId="+session.sessionId)
-.then(res=>res.json())
 .then(attendance=>{
 
 attendance.forEach(a=>{
