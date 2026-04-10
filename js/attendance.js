@@ -4,7 +4,7 @@ window.addEventListener("load", function(){
 
 if(document.getElementById("batchTitle")){
 
-fetch(API+"?action=getBatches")
+fetchCached(API+"?action=getBatches")
 .then(res=>res.json())
 .then(data=>{
 
@@ -103,71 +103,66 @@ setTimeout(()=>{
 
 function loadAllStudents(){
 
-fetch(API+"?action=getStudents")
-.then(res=>res.json())
-.then(students=>{
+Promise.all([
 
-fetch(API+"?action=getBatchStudents&batchId="+batchId)
-.then(res=>res.json())
-.then(batchStudents=>{
+    fetchCached(API+"?action=getStudents"),
+    fetchCached(API+"?action=getBatchStudents&batchId="+batchId)
 
-let selectedIds = batchStudents.map(s=>s[0])
+])
+.then(([students, batchStudents])=>{
 
-let btn = document.querySelector(".save-container button")
+    let selectedIds = batchStudents.map(s=>s[0])
 
-if(btn){
-    if(selectedIds.length > 0){
-        btn.innerText = "Update Students"
-    }else{
-        btn.innerText = "Save Students"
+    let btn = document.querySelector(".save-container button")
+
+    if(btn){
+        if(selectedIds.length > 0){
+            btn.innerText = "Update Students"
+        }else{
+            btn.innerText = "Save Students"
+        }
     }
-}
 
-let list=document.getElementById("studentList")
-list.innerHTML=""
+    let list = document.getElementById("studentList")
+    list.innerHTML = ""
 
-students.slice(1).forEach(s=>{
+    students.slice(1).forEach(s=>{
 
-if(!s[1]) return   // skip deleted student
+        if(!s[1]) return
 
-let checked = selectedIds.includes(s[0]) ? "checked" : ""
+        let checked = selectedIds.includes(s[0]) ? "checked" : ""
 
-list.innerHTML+=`
+        list.innerHTML += `
+        <label class="student-item">
 
-<label class="student-item">
+            <div class="student-checkbox">
+                <input type="checkbox" value="${s[0]}" ${checked}>
+            </div>
 
-<div class="student-checkbox">
-<input type="checkbox" value="${s[0]}" ${checked}>
-</div>
+            <div class="student-text">
+                ${s[1]}
+            </div>
 
-<div class="student-text">
-${s[1]}
-</div>
+        </label>
+        `
+    })
 
-</label>
+    updateStudentCount()
 
-`
+    // 🔥 AUTO SELECT ALL SYNC
+    let all = document.querySelectorAll("#studentList input")
+    let checked = document.querySelectorAll("#studentList input:checked")
 
-})
-
-updateStudentCount()
-
-// 🔥 AUTO SYNC SELECT ALL
-let all = document.querySelectorAll("#studentList input")
-let checked = document.querySelectorAll("#studentList input:checked")
-
-document.getElementById("selectAll").checked = (all.length > 0 && all.length === checked.length)
+    document.getElementById("selectAll").checked =
+        (all.length > 0 && all.length === checked.length)
 
 })
-
-})
-
 }
 
 /*==== LOAD BATCH STUDENTS FOR REMOVE ====*/
 function loadBatchStudentsForRemove(){
 
-fetch(API+"?action=getBatchStudents&batchId="+batchId)
+fetchCached(API+"?action=getBatchStudents&batchId="+batchId)
 .then(res=>res.json())
 .then(students=>{
 
@@ -219,7 +214,7 @@ checkboxes.forEach(cb=>{
 
 /* ===== GET ALREADY ADDED STUDENTS ===== */
 
-fetch(API+"?action=getBatchStudents&batchId="+batchId)
+fetchCached(API+"?action=getBatchStudents&batchId="+batchId)
 .then(res=>res.json())
 .then(existing=>{
 
@@ -403,19 +398,16 @@ function loadBatchStudents(){
 
 let batchId = localStorage.getItem("attendanceBatch")
 
-fetch(API + "?action=getBatchStudents&batchId=" + batchId)
-
-.then(res => res.json())
+fetchCached(API + "?action=getBatchStudents&batchId=" + batchId)
 
 .then(data => {
 
 let table = document.getElementById("attendanceTable")
-
 table.innerHTML = ""
 
-data.slice(0).forEach(student => {
+data.forEach(student => {
 
-if(!student[1]) return   // skip deleted
+if(!student[1]) return
 
 table.innerHTML += `
 <tr>
@@ -502,7 +494,7 @@ if(!valid){
    🔁 DUPLICATE DATE CHECK
 ========================= */
 
-fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
+fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
 .then(res=>res.json())
 .then(data=>{
 
@@ -657,18 +649,14 @@ function loadBatchAttendance(){
 
 let batchId = localStorage.getItem("attendanceBatch")
 
-fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
-
-.then(res=>res.json())
+fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
 
 .then(data=>{
 
 let table=document.getElementById("historyTable")
-
 table.innerHTML=""
 
-/* ===== SORT BY DATE ===== */
-
+/* SORT */
 data.sort((a,b)=> new Date(b.date) - new Date(a.date))
 
 data.forEach(a=>{
@@ -687,26 +675,22 @@ table.innerHTML+=`
 <td>${a.topic}</td>
 <td>
 <button onclick="viewAttendance('${a.sessionId}','${a.date}','${a.time}','${a.topic}','${batchId}')" class="view-btn">
-    <img src="view.png" alt="view">
+    <img src="view.png">
 </button>
 
 <button onclick="editSession('${a.sessionId}')" class="view-btn edit-btn-hover">
-    <img src="pencil.png" alt="edit">
+    <img src="pencil.png">
 </button>
 
 <button onclick="deleteSession('${a.sessionId}')" class="view-btn delete-btn-hover">
-    <img src="bin.png" alt="Delete">
+    <img src="bin.png">
 </button>
 </td>
-</td>
 </tr>
-
 `
-
 })
 
 })
-
 }
 
 function viewAttendance(sessionId, date, time, topic, batchId){
@@ -772,7 +756,7 @@ function editSession(sessionId){
 
 function loadSessionStudents(sessionId, row){
 
-    fetch(API+"?action=getSessionAttendance&sessionId="+sessionId)
+    fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
     .then(res=>res.json())
     .then(data=>{
 
@@ -849,7 +833,7 @@ function saveSession(sessionId){
     }
 
     // ❌ DUPLICATE DATE CHECK
-    fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
+    fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
     .then(res=>res.json())
     .then(data=>{
 
@@ -864,7 +848,7 @@ function saveSession(sessionId){
         }
 
         // 👉 COLLECT STUDENT DATA
-        fetch(API+"?action=getSessionAttendance&sessionId="+sessionId)
+        fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
         .then(res=>res.json())
         .then(students=>{
 
@@ -1123,7 +1107,7 @@ if(!batchId){
    🔹 GET BATCH INFO
 ========================= */
 
-let batchRes = await fetch(API+"?action=getBatches")
+let batchRes = await fetchCached(API+"?action=getBatches")
 let batchData = await batchRes.json()
 
 let batch = batchData.slice(1).find(b => b[0] == batchId)
@@ -1135,7 +1119,7 @@ let faculty = batch ? batch[2] : "Not Assigned"
    🔹 GET SESSIONS
 ========================= */
 
-let sessionRes = await fetch(API+"?action=getAttendanceSessions&batchId="+batchId)
+let sessionRes = await fetchCached(API+"?action=getAttendanceSessions&batchId="+batchId)
 let sessions = await sessionRes.json()
 
 if(!sessions.length){
@@ -1154,7 +1138,7 @@ let content = ""
 
 for(let s of sessions){
 
-    let res = await fetch(API+"?action=getSessionAttendance&sessionId="+s.sessionId)
+    let res = await fetchCached(API+"?action=getSessionAttendance&sessionId="+s.sessionId)
     let students = await res.json()
 
     let formattedDate = new Date(s.date).toLocaleDateString("en-GB", {

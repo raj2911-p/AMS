@@ -37,7 +37,7 @@ function createBatch(){
     return
     }
 
-    fetch(API+"?action=getBatches")
+    fetchCached(API+"?action=getBatches")
     .then(res=>res.json())
     .then(data=>{
 
@@ -80,11 +80,11 @@ function createBatch(){
 
 function loadBatch(){
 
-    fetch(API+"?action=getBatches")
+    fetchCached(API+"?action=getBatches")
     .then(res=>res.json())
     .then(data=>{
 
-        fetch(API+"?action=getBatchStudentCount")
+        fetchCached(API+"?action=getBatchStudentCount")
         .then(res=>res.json())
         .then(counts=>{
 
@@ -201,7 +201,7 @@ function saveBatchEdit(id){
     }
 
     // 👉 STEP 3: duplicate check
-    fetch(API+"?action=getBatches")
+    fetchCached(API+"?action=getBatches")
     .then(res=>res.json())
     .then(data=>{
 

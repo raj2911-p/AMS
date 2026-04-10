@@ -14,41 +14,30 @@ loadProfileImage()
 
 function loadCounts(){
 
+Promise.all([
+
+fetchCached(API+"?action=getStudents"),
+fetchCached(API+"?action=getBatches"),
+fetchCached(API+"?action=getTodayAttendance")
+
+])
+.then(([students, batches, attendance])=>{
+
 /* STUDENTS */
-
-fetch(API+"?action=getStudents")
-.then(res=>res.json())
-.then(data=>{
-
-let total=data.length-1
-animateNumber("totalStudents",total)
-
-})
+let totalStudents = students.length - 1
+animateNumber("totalStudents", totalStudents)
 
 /* BATCHES */
+let totalBatches = batches.length - 1
+animateNumber("totalBatches", totalBatches)
 
-fetch(API+"?action=getBatches")
-.then(res=>res.json())
-.then(data=>{
-
-let total=data.length-1
-animateNumber("totalBatches",total)
-
-createChart(data)
-
-})
+createChart(batches)
 
 /* ATTENDANCE */
-
-fetch(API+"?action=getTodayAttendance")
-.then(res=>res.json())
-.then(data=>{
-
-animateNumber("presentToday",data.present)
-animateNumber("absentToday",data.absent)
+animateNumber("presentToday", attendance.present)
+animateNumber("absentToday", attendance.absent)
 
 })
-
 }
 
 
@@ -90,7 +79,7 @@ batchNames.push(b[1])
 
 })
 
-fetch(API+"?action=getBatchStudentCount")
+fetchCached(API+"?action=getBatchStudentCount")
 
 .then(res=>res.json())
 
@@ -177,7 +166,7 @@ now.toLocaleDateString()+" | "+now.toLocaleTimeString()
 
 function loadTodayBirthdays(){
 
-fetch(API + "?action=getStudents")
+fetchCached(API + "?action=getStudents")
 .then(res => res.json())
 .then(data => {
 
@@ -375,7 +364,7 @@ let loader = document.getElementById("navLoader")
 loader.style.display = "flex"
 img.style.display = "none"
 
-fetch(API+"?action=getProfile&username="+encodeURIComponent(user))
+fetchCached(API+"?action=getProfile&username="+encodeURIComponent(user))
 .then(res=>res.json())
 .then(data=>{
 

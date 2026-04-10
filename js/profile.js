@@ -39,7 +39,7 @@ return
 
 let user = (localStorage.getItem("user") || "").trim()
 
-fetch(API+"?action=getProfile&username="+encodeURIComponent(localStorage.getItem("user")))
+fetchCached(API+"?action=getProfile&username="+encodeURIComponent(localStorage.getItem("user")))
 .then(res=>res.json())
 .then(data=>{
 

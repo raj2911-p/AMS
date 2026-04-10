@@ -14,7 +14,7 @@ document.getElementById("attTopic").innerText = topic
 
 /* LOAD BATCH NAME + FACULTY */
 
-fetch(API+"?action=getBatches")
+fetchCached(API+"?action=getBatches")
 .then(res=>res.json())
 .then(data=>{
 
@@ -35,7 +35,7 @@ document.getElementById("facultyName").innerText =
 
 /* LOAD ATTENDANCE */
 
-fetch(API+"?action=getSessionAttendance&sessionId="+sessionId)
+fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
 
 .then(res=>res.json())
 
@@ -96,7 +96,7 @@ let sessionId = localStorage.getItem("viewSession")
    🔹 GET BATCH INFO
 ========================= */
 
-let batchRes = await fetch(API+"?action=getBatches")
+let batchRes = await fetchCached(API+"?action=getBatches")
 let batchData = await batchRes.json()
 
 let batch = batchData.slice(1).find(b => b[0] == batchId)
@@ -108,7 +108,7 @@ let faculty = batch ? batch[2] : "Not Assigned"
    🔹 GET STUDENTS
 ========================= */
 
-let res = await fetch(API+"?action=getSessionAttendance&sessionId="+sessionId)
+let res = await fetchCached(API+"?action=getSessionAttendance&sessionId="+sessionId)
 let students = await res.json()
 
 let rows = ""
